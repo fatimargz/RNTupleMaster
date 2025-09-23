@@ -1,25 +1,27 @@
-\noindent Chapter\hfill Page\@@@par 
-\contentsline {chapter}{\numberline {1}Introduction}{1}{}%
-\contentsline {chapter}{\numberline {2}The ATLAS Experiment}{3}{}%
-\contentsline {section}{\numberline {2.1}Detector Technology}{3}{}%
-\contentsline {subsection}{\numberline {2.1.1}Inner Detector}{3}{}%
-\contentsline {subsubsection}{\numberline {2.1.1.1}Pixel Detector}{4}{}%
-\contentsline {subsubsection}{\numberline {2.1.1.2}Semiconductor Tracker}{4}{}%
-\contentsline {subsubsection}{\numberline {2.1.1.3}Transition Radiation Tracker}{4}{}%
-\contentsline {subsection}{\numberline {2.1.2}Calorimeter}{4}{}%
-\contentsline {subsubsection}{\numberline {2.1.2.1}Liquid Argon Calorimeter}{4}{}%
-\contentsline {subsection}{\numberline {2.1.3}Tile Hadronic Calorimeter}{4}{}%
-\contentsline {subsection}{\numberline {2.1.4}Muon Spectrometer}{4}{}%
-\contentsline {subsubsection}{\numberline {2.1.4.1}Thin Gap Chambers}{4}{}%
-\contentsline {subsubsection}{\numberline {2.1.4.2}Resistive Plate Chambers}{4}{}%
-\contentsline {subsubsection}{\numberline {2.1.4.3}Monitored Drift Tubes}{4}{}%
-\contentsline {subsubsection}{\numberline {2.1.4.4}Small-Strip Thin-Gap}{4}{}%
-\contentsline {subsubsection}{\numberline {2.1.4.5}Micromegas}{4}{}%
-\contentsline {subsection}{\numberline {2.1.5}Magnet System}{4}{}%
-\contentsline {subsubsection}{\numberline {2.1.5.1}Central Solenoid Magnet}{4}{}%
-\contentsline {subsubsection}{\numberline {2.1.5.2}Barrel Toroid}{4}{}%
-\contentsline {subsubsection}{\numberline {2.1.5.3}End-cap Toroids}{4}{}%
-\contentsline {section}{\numberline {2.2}ATLAS Trigger System}{4}{}%
-\contentsline {subsection}{\numberline {2.2.1}First-Level Hardware Trigger}{4}{}%
-\contentsline {subsection}{\numberline {2.2.2}Second-Level Hardware Trigger}{4}{}%
+\hspace *{\fill }Page\@@@par 
+\contentsline {chapter}{List of Figures}{vi}{chapter*.4}%
+\noindent Chapter\@@@par 
+\contentsline {chapter}{\numberline {1}Introduction}{1}{chapter.1}%
+\contentsline {chapter}{\numberline {2}The ATLAS Experiment}{3}{chapter.2}%
+\contentsline {section}{\numberline {2.1}Detector Technology}{3}{section.2.1}%
+\contentsline {subsection}{\numberline {2.1.1}Inner Detector}{3}{subsection.2.1.1}%
+\contentsline {subsubsection}{\numberline {2.1.1.1}Pixel Detector}{5}{subsubsection.2.1.1.1}%
+\contentsline {subsubsection}{\numberline {2.1.1.2}Semiconductor Tracker}{5}{subsubsection.2.1.1.2}%
+\contentsline {subsubsection}{\numberline {2.1.1.3}Transition Radiation Tracker}{5}{subsubsection.2.1.1.3}%
+\contentsline {subsection}{\numberline {2.1.2}Calorimeter}{5}{subsection.2.1.2}%
+\contentsline {subsubsection}{\numberline {2.1.2.1}Liquid Argon Calorimeter}{5}{subsubsection.2.1.2.1}%
+\contentsline {subsection}{\numberline {2.1.3}Tile Hadronic Calorimeter}{5}{subsection.2.1.3}%
+\contentsline {subsection}{\numberline {2.1.4}Muon Spectrometer}{5}{subsection.2.1.4}%
+\contentsline {subsubsection}{\numberline {2.1.4.1}Thin Gap Chambers}{5}{subsubsection.2.1.4.1}%
+\contentsline {subsubsection}{\numberline {2.1.4.2}Resistive Plate Chambers}{5}{subsubsection.2.1.4.2}%
+\contentsline {subsubsection}{\numberline {2.1.4.3}Monitored Drift Tubes}{5}{subsubsection.2.1.4.3}%
+\contentsline {subsubsection}{\numberline {2.1.4.4}Small-Strip Thin-Gap}{5}{subsubsection.2.1.4.4}%
+\contentsline {subsubsection}{\numberline {2.1.4.5}Micromegas}{5}{subsubsection.2.1.4.5}%
+\contentsline {subsection}{\numberline {2.1.5}Magnet System}{5}{subsection.2.1.5}%
+\contentsline {subsubsection}{\numberline {2.1.5.1}Central Solenoid Magnet}{5}{subsubsection.2.1.5.1}%
+\contentsline {subsubsection}{\numberline {2.1.5.2}Barrel Toroid}{5}{subsubsection.2.1.5.2}%
+\contentsline {subsubsection}{\numberline {2.1.5.3}End-cap Toroids}{5}{subsubsection.2.1.5.3}%
+\contentsline {section}{\numberline {2.2}ATLAS Trigger System}{5}{section.2.2}%
+\contentsline {subsection}{\numberline {2.2.1}First-Level Hardware Trigger}{5}{subsection.2.2.1}%
+\contentsline {subsection}{\numberline {2.2.2}Second-Level Hardware Trigger}{5}{subsection.2.2.2}%
 \contentsfinish 

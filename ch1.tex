@@ -4,10 +4,6 @@
 Our current understanding of the building blocks of our universe is summarized with one model, called the Standard Model (SM). From the way we power our cities, to the particles that hold them together, the SM explains how the basic building blocks of matter interact, governed by the four fundamental forces. Yet, questions remain about the SM, such as why are there only three generations of fundamental particles? What is the nature of dark matter and dark energy, and how does it fit within the SM? What about the origin of the matter-antimatter asymmetry? Is there a unification theory for the fundamental forces? Is the SM complete or do other exotic particles exists? Over the years, experimental particle physicists and engineers have built technology to test the SM, either by performing precision measurements of particles and their behaviors, or by colliding particles and measuring their outputs. As a result, we have increased our confidence in the SM theory, but continue to search for answers of these remaining questions through experimental discovery.  
 % add SM figure
 
-
-A Toroidal LHC Apparatus (ATLAS) is a particle physics experiment designed to detect the high-energy particle collisions from the Large Hadron Collider (LHC). Collisions take place at a rate of more than a billion interactions per second, which is a combined data volume of about 60 million megabytes per second. However, in order to study rare processes, as shown in Figure \ref{fig:SM_cross-sections}, the LHC will have a major upgrade to increase the number of collisions by a factor of 5 to 7.5. This upgrade, called the High-Luminosity LHC, will require a new data storage format that can handle this increase in data.
-% I need to edit the wording in this paragraph
-
 \begin{figure}
 \begin{subfigure}{0.5\textwidth}
 \includegraphics[width=0.9\linewidth, height=6cm]{ch1_images/SMSummary.png}
@@ -20,6 +16,9 @@ A Toroidal LHC Apparatus (ATLAS) is a particle physics experiment designed to de
 	}
 \label{fig:SM_cross-sections}
 \end{figure}
+
+A Toroidal LHC Apparatus (ATLAS) is a particle physics experiment designed to detect the high-energy particle collisions from the Large Hadron Collider (LHC). Collisions take place at a rate of more than a billion interactions per second, which is a combined data volume of about 60 million megabytes per second. However, in order to study rare processes, as shown in Figure \ref{fig:SM_cross-sections}, the LHC will have a major upgrade to increase the number of collisions by a factor of 5 to 7.5. This upgrade, called the High-Luminosity LHC, will require a new data storage format that can handle this increase in data.
+% I need to edit the wording in this paragraph
 
 %%%Introduce what RNTuple is and why it will be replacing TTree.
 RNTuple is the new ROOT data storage format that will be in use at the start of the HL-LHC. Due to its design, which takes advantage of modern C++ techniques, it is set to improve read speedability and memory usage compared to its predecessor, TTree, and other data storage formats such as HDF5 and Parquet. At the start of this work, performance studies on RNTuple were conducted at the production level, and RNTuple was still at an experimental stage. The studies highlighted in this work investigate the performance of RNTuple on the analysis front for ATLAS workflows and serve as documentation for future RNTuple usage. 
