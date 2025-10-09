@@ -3,7 +3,6 @@
 % what is particle physics and why is it important to the world? 
 Our current understanding of the building blocks of our universe is summarized with one model, called the Standard Model (SM). From the way we power our cities, to the particles that hold them together, the SM explains how the basic building blocks of matter interact, governed by the four fundamental forces. Yet, questions remain about the SM, such as why are there only three generations of fundamental particles? What is the nature of dark matter and dark energy, and how does it fit within the SM? What about the origin of the matter-antimatter asymmetry? Is there a unification theory for the fundamental forces? Is the SM complete or do other exotic particles exists? Over the years, experimental particle physicists and engineers have built technology to test the SM, either by performing precision measurements of particles and their behaviors, or by colliding particles and measuring their outputs. As a result, we have increased our confidence in the SM theory, but continue to search for answers of these remaining questions through experimental discovery.  
 % add SM figure
-
 \begin{figure}
 \begin{subfigure}{0.5\textwidth}
 \includegraphics[width=0.9\linewidth, height=6cm]{ch1_images/SMSummary.png}
@@ -12,22 +11,46 @@ Our current understanding of the building blocks of our universe is summarized w
 \includegraphics[width=0.9\linewidth,height=6cm]{ch1_images/SMSummary_b.png}
 \end{subfigure}
 \caption[Summary of SM cross-section Measurments]{
-	Summary of several Standard Model cross-section measurements (a) with associated references (b). The measurements are corrected for branching fractions, compared to the corresponding theoretical expectations. 
+	Summary of several Standard Model cross-section measurements (a) with associated references (b). \cite{ATLASSummaryPlots} Cross-sections can be thought of as probabilities that a process occurs. This means that the processes with smaller cross-sections are considered 'rare-processes' because it has a lower probability of being observed. Increasing the probability of these rare-processes would require an increase of luminosity or collisions. The measurements are corrected for branching fractions, compared to the corresponding theoretical expectations. 
 	}
 \label{fig:SM_cross-sections}
 \end{figure}
 
-A Toroidal LHC Apparatus (ATLAS) is a particle physics experiment designed to detect the high-energy particle collisions from the Large Hadron Collider (LHC). Collisions take place at a rate of more than a billion interactions per second, which is a combined data volume of about 60 million megabytes per second. However, in order to study rare processes, as shown in Figure \ref{fig:SM_cross-sections}, the LHC will have a major upgrade to increase the number of collisions by a factor of 5 to 7.5. This upgrade, called the High-Luminosity LHC, will require a new data storage format that can handle this increase in data.
+A Toroidal LHC Apparatus (ATLAS) is a particle physics experiment designed to detect the high-energy particle collisions from the Large Hadron Collider (LHC). At the LHC, collisions take place at a rate of more than a billion interactions per second, which is a combined data volume of about 60 million megabytes per second. However, in order to study rare processes, as shown in Figure \ref{fig:SM_cross-sections}, the LHC will have a major upgrade to increase the number of collisions by a factor of 5 to 7.5. This upgrade, called the High-Luminosity LHC, will require a new data storage format that can handle this increase in data.
 % I need to edit the wording in this paragraph
 
 %%%Introduce what RNTuple is and why it will be replacing TTree.
-RNTuple is the new ROOT data storage format that will be in use at the start of the HL-LHC. Due to its design, which takes advantage of modern C++ techniques, it is set to improve read speedability and memory usage compared to its predecessor, TTree, and other data storage formats such as HDF5 and Parquet. At the start of this work, performance studies on RNTuple were conducted at the production level, and RNTuple was still at an experimental stage. The studies highlighted in this work investigate the performance of RNTuple on the analysis front for ATLAS workflows and serve as documentation for future RNTuple usage. 
+RNTuple is the new ROOT data storage format that will be in use at the start of the HL-LHC. Due to its design, which takes advantage of modern C++ techniques, it is set to improve read speedability and memory usage compared to its predecessor, TTree, and other data storage formats such as HDF5 and Parquet. At the start of this work, performance studies on RNTuple were conducted at the production level, and RNTuple was still at an experimental stage. 
 
 %%%Paragraph on paper outline.
-In the next chapter, I will describe the ATLAS experiment and its detector technology. In Chapter 3, I will introduce the ATLAS software and computing system, and explain our data contents. In Chapter 4, I will give an introduction to RNTuple and TTree. Examples of how RNTuple is applied in comparison to TTree will be shown. In Chapter 5, I will demonstrate the performance studies conducted for RNTuple and how they compare with TTree. In Chapter 6, I will describe the Analysis Grand Challenge (AGC) which served as a benchmark for RNTuple. Finally I will give my conclusions in Chapter 7.
+This thesis investigates the performance of RNTuple for ATLAS analysis workflows. This chapter will provide a more detail introduction of the SM, followed by an introduction to the ATLAS experiment and its detector technology in Chapter 2. In Chapter 3, the ATLAS software and computing system, and data contents are introduced. In Chapter 4, an introduction to RNTuple and TTree is provided along with examples of how RNTuple is applied in comparison to TTree. Performance studies conducted for RNTuple and how they compare with TTree will be presented in Chapter 5. In Chapter 6, the Analysis Grand Challenge (AGC) is introduced along with its RNTuple implementation. A final discussion and conclusions are given in Chapter 7.
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Standard model of particle physics}
+% one paragraph providing an overview of particle characteristics for matter vs. forces., units, bosons vs fermions. 
+Particles are categorized by their inherent physical properties that define their shape, density, and behavior. For example, \em{bosons} are elementary particles that govern what we describe as force in the everyday world: Photons are responsible for electromagnetic radiation, W bosons for the weak force, Z bosons for the strong force, and gluons for gravitational force. These particles share a "force-carrying" behavior because of a fundamental property called spin. Similar to the Earth, particles carry orbital angular momentum and spin angular momentum; however, for particles, spin is an intrinsic property. All bosons carry an integer spin; meanwhile, \em{fermions} carry half-integer spin. Fermions are the second group of elementary particles that make up what we call matter. This includes, electrons, muons, taus, and quarks. 
+%bosons and fermions 1.4 table from Robert Mann book
+\begin{table}[htb]
+\caption[Attractive\/Repulsive Character of Forces.]{\label{bosons_vs_fermions}
+Attractive\/Repulsive Character of Forces \cite{Mann:2010nvj}.
+}
+\begin{center}
+\begin{tabular}{c c}
+\hline
+ODD-INTEGER SPIN PARTICLES: & mediate forces that are \em{both} attractive \em{and} repulsive\\
+EVEN-INTEGER SPIN PARTICLES: & mediate forces that are \em{either} attractive \em{or} repulsive\\
+\hline
+\end{tabular}
+\end{center}
+\end{table}
+% Standard Model Figure
+\begin{figure}
+\centerline{\includegraphics[height=95mm]{ch1_images/Standard_Model_of_Elementary_Particles.png}}
+\caption[The SM.]{Particle content of the Standard Model \cite{SM-wikidpedia}.}
+\label{fig:SM_wikid}
+\end{figure}
 
+% another describing the particle contents of the SM
+The SM of particle physics, Figure \ref{fig:SM_wikid}, summarizes those physical properties and parameters confirmed from experiments into four groups: quarks, leptons, gauge bosons, and scalar bosons. Quarks and leptons are fermions. Each exist in three generations and each particle has own antiparticle. Quarks interact through the strong interaction while leptons participate via electroweak interactions. The three charged leptons ($e$, $\mu$, $\tau$) are massive, and their corresponding nuetrinos ($\nu_e$,$\nu_{\mu}$,$\nu_{\tau}$), are massless and have nuetral charge. The six types of quarks also have a property called color charge which facilitates the strong interaction. For the four vector bosons, $W^{\pm}$ and Z bosons mediate the electroweak force, and gluons, which also carry a property called color charge, mediate the strong force. The Higgs boson has its own section as a scalar boson because unlike the vector bosons with spin 1, the Higgs boson has spin 0. In sum, there are a total of 12 leptons including their antiparticles, 36 quarks including all the flavors and their antiparticles, 12 vector bosons, and 1 scalar boson, which makes a total of 61 fundamental particles.
 %%% Local Variables: 
 %%% TeX-master: "mythesis"
 %%% End: 
