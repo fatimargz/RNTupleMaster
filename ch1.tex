@@ -1,7 +1,7 @@
 \chapter{Introduction}		% chapter 1
 \label{introchap}		% for reference (\ref{introchap})
 % what is particle physics and why is it important to the world? 
-Our current understanding of the building blocks of our universe is summarized with one model, called the Standard Model (SM). From the way we power our cities, to the particles that hold them together, the SM explains how the basic building blocks of matter interact, governed by the four fundamental forces. Yet, questions remain about the SM, such as why are there only three generations of fundamental particles? What is the nature of dark matter and dark energy, and how does it fit within the SM? What about the origin of the matter-antimatter asymmetry? Is there a unification theory for the fundamental forces? Is the SM complete or do other exotic particles exists? Over the years, experimental particle physicists and engineers have built technology to test the SM, either by performing precision measurements of particles and their behaviors, or by colliding particles and measuring their outputs. As a result, we have increased our confidence in the SM theory, but continue to search for answers of these remaining questions through experimental discovery.  
+Our current understanding of the building blocks of our universe is summarized with one model, called the Standard Model (SM). From the way we power our cities, to the particles that hold them together, the SM explains how the basic building blocks of matter interact, governed by the four fundamental forces: gravity, electromagnetism, the strong force and the weak force. Yet, questions remain about the SM, such as why are there only three generations of fundamental particles? What is the nature of dark matter and dark energy, and how does it fit within the SM? What about the origin of the matter-antimatter asymmetry? Is there a unification theory for the fundamental forces? Is the SM complete or do other exotic particles exists? Over the years, experimental particle physicists and engineers have built technology to test the SM, either by performing precision measurements of particles and their behaviors, or by colliding particles and measuring their outputs. As a result, we have increased our confidence in the SM theory, but continue to search for answers for these remaining questions through experimental discovery.  
 % add SM figure
 \begin{figure}
 \begin{subfigure}{0.5\textwidth}
@@ -11,7 +11,7 @@ Our current understanding of the building blocks of our universe is summarized w
 \includegraphics[width=0.9\linewidth,height=6cm]{ch1_images/SMSummary_b.png}
 \end{subfigure}
 \caption[Summary of SM cross-section Measurments]{
-	Summary of several Standard Model cross-section measurements (a) with associated references (b). \cite{ATLASSummaryPlots} Cross-sections can be thought of as probabilities that a process occurs. This means that the processes with smaller cross-sections are considered 'rare-processes' because it has a lower probability of being observed. Increasing the probability of these rare-processes would require an increase of luminosity or collisions. The measurements are corrected for branching fractions, compared to the corresponding theoretical expectations. 
+	Summary of several Standard Model cross-section measurements (a) with associated references (b) \cite{ATLASSummaryPlots}. Cross-sections can be thought of as probabilities that a process occurs. This means that the processes with smaller cross-sections are considered rare-processes because it has a lower probability of being observed. Increasing the probability of these rare-processes would require an increase of luminosity or collisions. The measurements are corrected for branching fractions, compared to the corresponding theoretical expectations. 
 	}
 \label{fig:SM_cross-sections}
 \end{figure}
@@ -27,21 +27,30 @@ This thesis investigates the performance of RNTuple for ATLAS analysis workflows
 
 \subsection{Standard model of particle physics}
 % one paragraph providing an overview of particle characteristics for matter vs. forces., units, bosons vs fermions. 
-Particles are categorized by their inherent physical properties that define their shape, density, and behavior. For example, \em{bosons} are elementary particles that govern what we describe as force in the everyday world: Photons are responsible for electromagnetic radiation, W bosons for the weak force, Z bosons for the strong force, and gluons for gravitational force. These particles share a "force-carrying" behavior because of a fundamental property called spin. Similar to the Earth, particles carry orbital angular momentum and spin angular momentum; however, for particles, spin is an intrinsic property. All bosons carry an integer spin; meanwhile, \em{fermions} carry half-integer spin. Fermions are the second group of elementary particles that make up what we call matter. This includes, electrons, muons, taus, and quarks. 
-%bosons and fermions 1.4 table from Robert Mann book
+The SM is a quantum field theory that explains and catagorizes all observed fundamental particles by their properties and interactions. Quantum field theory (QFT) is the main theoretical tool for describing particle interactions by combining special relativity and quantum mechanics. Due to this combination, QFT is a probabilistic theory where each particle has an associated field that permeates all of space; therefore, forces are simply the interactions between these different fields. For example, the electromagnetic force is just the interaction between the electromagnetic field and charged matter fields, which fall under quantum electrodynamics (QED). In sum, the SM encompasses all known elementary particle interactions, except for gravity, through a collection of quantum field theories, each dictated by gauge symmetries: QED ($U(1)$), the Glashow-Weinberg-Salam theory of electroweak processes ($SU(3)$), and quantum chromodynamics ($SU(2) x U(1)$).
+
+\subsubsection{Symmetries and Particle Content}
+In physics, symmetries are fundamental because they lead to conservation laws through Noether's Theorem. Symmetries can manifest in two notions: invariance and covariance. Properties of a system are described as invariant if they do not change under a symmetry transformation. For example, rotating a sphere and without altering gravitational force would indicate a conservation of angular momentum. In contrast, covariance is used to describe a system that changes in accordance to changes induced by symmetry transformations. 
+
+The SM is a gauge theory based on the symmetry group $SU(3)_C x SU(2)_L x U(1)_Y$. Gauge theory is a QFT that requires invariance under continous transformations, and a symmetry group is a set objects that obey the four properties listed in Table \ref{group_axioms}. $SU(3)_c$ is called the color symmetry group describing the strong nuclear force, which is the intraction between quarks and gluons. $SU(2)_L x U(1)_Y$ describes the electromagnetic and weak nuclear forces, which is the interactions between leptons, photons and W\/Z bosons. 
+% axioms of a group from Robert Mann book
 \begin{table}[htb]
-\caption[Attractive\/Repulsive Character of Forces.]{\label{bosons_vs_fermions}
-Attractive\/Repulsive Character of Forces \cite{Mann:2010nvj}.
+\caption[Properties of a Group.]{\label{group_axioms}
+Properties of a Group \cite{Mann:2010nvj}.
 }
 \begin{center}
-\begin{tabular}{c c}
+\begin{tabular}{c c c}
 \hline
-ODD-INTEGER SPIN PARTICLES: & mediate forces that are \em{both} attractive \em{and} repulsive\\
-EVEN-INTEGER SPIN PARTICLES: & mediate forces that are \em{either} attractive \em{or} repulsive\\
+CLOSURE & If $g_1, g_2 \in G \rightarrow g_1 \diamond g_2 \in G$ & (combinations remain in the set) \\
+IDENTITY & There exists $I \in G \rightarrow I \diamond g_i = g_i$ for every $g_i \in G$ & (one element does nothing) \\
+INVERSE & Every $g_i \in G$ has a $g_i^{-1} \in G$ such that $g_1 \diamond g_i^{-1} = I$ & (combinations can be undone) \\
+ASSOCIATIVITY & If $g_1, g_2, g_3 \in G \rightarrow (g_1 \diamond g_2) \diamond g_3 = g_1 \diamond (g_2 \diamond g_3)$ & (combinational groupings can be interchanged) \\ 
 \hline
 \end{tabular}
 \end{center}
 \end{table}
+
+Furthermore, the four groups of particles shown in Figure \ref{fig:SM_wikid}: quarks, leptons, gauge bosons, and scalar bosons, can be further categorized as \emph{bosons} or \emph{fermions} because of a fundamental property called spin. Similar to the Earth, particles carry orbital angular momentum and spin angular momentum; however, for particles, spin is an intrinsic property. All bosons carry an integer spin; meanwhile, fermions carry half-integer spin. As a result from QFT, each fermion has an antiparticle with the same mass and lifetime as the particle itself, but oppositely charged. The three charged leptons ($e$, $\mu$, $\tau$) are massive, while their corresponding nuetrinos ($\nu_e$,$\nu_{\mu}$,$\nu_{\tau}$), are massless with nuetral charge. Due to QCD, there are 8 types of gluons. The Higgs boson has its own section as a scalar boson because unlike the vector bosons with spin 1, the Higgs boson has spin 0. In sum, there are a total of 12 leptons including their antiparticles, 36 quarks including all the flavors and their antiparticles, 12 vector bosons, and 1 scalar boson, which makes a total of 61 fundamental particles.
 % Standard Model Figure
 \begin{figure}
 \centerline{\includegraphics[height=95mm]{ch1_images/Standard_Model_of_Elementary_Particles.png}}
@@ -49,8 +58,13 @@ EVEN-INTEGER SPIN PARTICLES: & mediate forces that are \em{either} attractive \e
 \label{fig:SM_wikid}
 \end{figure}
 
-% another describing the particle contents of the SM
-The SM of particle physics, Figure \ref{fig:SM_wikid}, summarizes those physical properties and parameters confirmed from experiments into four groups: quarks, leptons, gauge bosons, and scalar bosons. Quarks and leptons are fermions. Each exist in three generations and each particle has own antiparticle. Quarks interact through the strong interaction while leptons participate via electroweak interactions. The three charged leptons ($e$, $\mu$, $\tau$) are massive, and their corresponding nuetrinos ($\nu_e$,$\nu_{\mu}$,$\nu_{\tau}$), are massless and have nuetral charge. The six types of quarks also have a property called color charge which facilitates the strong interaction. For the four vector bosons, $W^{\pm}$ and Z bosons mediate the electroweak force, and gluons, which also carry a property called color charge, mediate the strong force. The Higgs boson has its own section as a scalar boson because unlike the vector bosons with spin 1, the Higgs boson has spin 0. In sum, there are a total of 12 leptons including their antiparticles, 36 quarks including all the flavors and their antiparticles, 12 vector bosons, and 1 scalar boson, which makes a total of 61 fundamental particles.
+\subsection{Standard Model Limitations}
+
+
+
+\subsection{Phenomenology of Large Hadron Colliders}
+
+
 %%% Local Variables: 
 %%% TeX-master: "mythesis"
 %%% End: 
