@@ -1,0 +1,33 @@
+\chapter{RNTuple}		
+\label{fourthchapter}
+% Introduction of RNTuple and why we need it
+RNTuple is the new columnar data format that will be implemented at the start of the HL-LHC. It's design continues to be columnar based, as its predecessor TTree, but it now uses modern storage technologies for better performance charactersitics in data compactness, scalability and read and write speed. For this reason RNTuple classes are backwards-incompatible to TTree both on the file format level and on the API level \cite{RNTupleSpecs2025}. It's binary format version follows an \emph{epoch.major.minor.path} scheme, where \emph{epoch} indicates backward-incompatible changes, \emph{major} indicates forward-incompatible changes, \emph{minor} indicates new optional format features, and \emph{patch} indicates backported features from newer format verions. This chapter will introduce the RNTuple structure and user interfaces (UI) for different workflows using the first public release of RNTuple 1.0.0.0.
+
+\section{Data Structure}
+RNTuple organizes data using an internal BLOB-based data layout and an external metadata schema. A BLOB (binary large object) is a collection of binary data stored as a single entity. For example, instead of embedding data directly into a database, data can be stored as a BLOB along with a unique identifier for later retreival. This is beneficial for managing large unstructured data \cite{GoogleCloud}. RNTuple uses a similar approach internally: Data is organized by columns of a single type and are attached to \emph{fields}, which describes a serialized C++ type. Columns are partitioned into \emph{pages}. Pages are compressed individually, similar to TTree baskets. \emph{Clusters} are sets of pages that contain all the data belonging to an entry range. \emph{Envelopes} are data blocks that contain metadata, such as field and columns types, cluster descriptions, and page locations. Overall, this structure allows for random-access of individual events without decompressing the entire dataset and for "fast merging" or concatenating RNTuples. A simplified diagram of the RNTuple structre in comparison to TTree is shown in Figure \ref{fig:RNTupleStructure}. 
+\begin{figure}
+\centerline{\includegraphics[width=\textwidth,height=90mm]{ch4_images/SerhanScreenshotRNTupleStructure.png}}
+\caption[RNTupleStructure]{TTree Structure vs. RNTuple Structure \cite{Serhan}.}
+\label{fig:RNTupleStructure}
+\end{figure}
+
+ \section{UI}
+RNTuple API is compatible with RDataFrame analysis workflows and hand-written event loops \cite{Blomer2020}. The sections below will provide further details and examples.  
+
+\subsection{C++}
+For hand-written event loops, RNTuple interface uses smart pointers, which simulates a pointer while providing automatic memory management \cite{smartpointer}. This feature shortens the amount of code necessary to read and load data by a couple of lines. For example \texttt{RNTupleReader::Open} simultaneously loads the ROOT file and the RNTuple. The function \texttt{GetView} also simultaneously loads and stores a field. In the example below, the RNTuple is called "EventData" and the field is being stored into the object \texttt{electron\_pt}, which is the transverse momentum of electrons, "AnalysisElectronsAux:pt".
+
+\begin{lstlisting}[language=C]
+auto ntuple = RNTupleReader::Open("EventData", "DAOD_PHYSLITE.pool.root");
+auto electron_pt = ntuple->GetView<std::vector<float>("AnalysisElectronsAux:pt");
+\end{lstlisting}
+
+\subsection{RDataFrame}
+Analysis done with RDataFrame will mostly remain unmodified with RNTuple, with the exception of filtering. Due to RNTuple's internal data structure, subfields such as "AnalysisElectronsAux:pt" are separated by their field, "AnalysisElectronsAux" by a column, instead of a period. This slight change confuses the filtering function in RDataFrame, but can be bypassed by assigning an alias name: 
+
+\begin{lstlisting}[language=C]
+auto df = ROOT::RDF::RNTuple("EventData", "DAOD_PHYSLITE.pool.root");
+auto new_df = df.Alias("electron_pt", "AnalysisElectronsAux:pt");
+std::string analysis_cut = "(electron_pt.size()>=1&&electron_pt.at(0)>25000";
+auto filtered_df = new_df.Filter(analysis_cut);
+\end{lstlisting}

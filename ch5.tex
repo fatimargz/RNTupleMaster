@@ -1,0 +1,55 @@
+\chapter{RNTuple vs. TTree}		
+\label{fifthchapter}
+In this section, RNTuple performance is analyzed using RDataFrame in C++ and compared to TTree. First, 92 TTrees stored in \texttt{DAOD\_PHYSLITE} files from ATLAS Open Data \cite{ATLASOpenData} were converted to RNTuples using its default compression algorithm setting, ZSTD. Speed tests were performed for loading and outputting RNTuples in comparison to TTrees using \texttt{std::chrono::high\_resolution\_clock::now()}. Each performance study contains two version: a TTree version that uses TTree inputs and an RNTuple version that uses the RNTuple inputs. A comparison of peak memory consumption was also performed using both sets of inputs. This entire process was repeated for RNTuple inputs converted with LZ4 compression algorithm as well. 
+
+\section{Readability Speed}
+The total loading times for 92 RNTuples and their TTree equivalence were measured 100 times. Loading multiple RNTuples in RDataFrame is the same procedure as done for the TTree version: 
+
+\begin{lstlisting}[language=C]
+std::string path = "path_to_files";
+std::vector<std::string> filenames;
+for (const auto& entry: std::filesystem::directory_iterator(path)){
+	std::string filename = entry.path().filename().string();
+	filenames.push_back(entry.path().string());
+}
+auto df = ROOT::RDF::FromRNTuple("EventData", filenames);
+\end{lstlisting}
+ 
+ The timer was stopped after calculating the sum of the column "\texttt{AnalysisElectrons:pt}" to ensure that the data was loaded. These times were recorded into a text file and are shown in Figure \ref{fig:loading}. In comparison, this study finds RNTuple to be 2.38 times faster at loading a column of data over TTree. 
+\begin{figure}
+\centerline{\includegraphics[height=95mm]{ch5_images/LoadingHistograms.png}}
+\caption[Loading Histogram Times]{Total loading times measured for TTree and RNTuple using RDataFrame in C++.}
+\label{fig:loading}
+\end{figure}
+
+\section{Writing Speed}
+Writing speed was measured by performing an invariant mass calculation and outputting a new data set with two columns: "\texttt{ElectronPairsInvMass}" and "\texttt{Muon PairsInvMass}". The timer began at the start of an invariant mass calculation and stopped after creating a new dataset. A TTree was written for the TTree version and an RNTuple was written for the RNTuple version. At the start of this study, the lazy function that outputs a TTree in RDataFrame, \texttt{df.Snapshot(...)} was not developed to output an RNTuple; therefore, for consistency, both versions of the script used the RDataFrame function \texttt{df.ForEach(...)} to fill in the new columns. This procedure for RNTuple is shown below:
+
+\begin{lstlisting}[language=C]
+auto model = RNTupleModel::Create();
+auto e_invm = model->MakeField<ROOT::VecOps::RVec<float>>("ElectronPairsInvMass"); 
+auto m_invm = model->MakeField<ROOT::VecOps::RVec<float>>("MuonPairsInvMass");
+auto ntuple = RNTupleWriter::Recreate(std::move(model), "FatisRNTuple", "rnt_invm.root");
+df_leptons.Foreach([&](ROOT::VecOps:RVec<float> e_vals, ROOT:VecOps::RVec<float> m_vals){
+	*e_invm = e_vals;
+	*m_invm = m_vals; ntuple->Fill();
+}, {"invm_electrons","invm_muons"});
+\end{lstlisting}
+
+The total output times were recorded in a text file and are shown in Figure \ref{fig:writing}. RNTuple is shown to be 1.51 times faster at writing datasets in RDataFrame C++ than when using TTrees. 
+\begin{figure}
+\centerline{\includegraphics[height=95mm]{ch5_images/OutputHistograms.png}}
+\caption[Output Histogram Times]{Total writing times measured for TTree and RNTuple using RDataFrame in C++.}
+\label{fig:writing}
+\end{figure}
+
+\section{Memory Consumption}
+The peak memory usage when writing out a dataset was also measured for RNTuple and TTree versions. The same procedure using the invariant mass calculation was repeated 100 times, but using the command \texttt{usr/bin/time}. Those measurements are shown in Figure \ref{fig:MemoryInvm}
+\begin{figure}
+\centerline{\includegraphics[height=95mm]{ch5_images/memory_histogram_invm.png}}
+\caption[Memory Measurements]{Peak memory measurments of TTree and RNTuple writing scripts [NOTE FOR FATIMA: CONSISTENT HISTOGRAM SHADING].}
+\label{fig:MemoryInvm}
+\end{figure}
+
+\section{Compression Algorithms Study}
+[Under Construction]
