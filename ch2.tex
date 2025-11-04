@@ -2,42 +2,73 @@
 \label{secondchap}		% for reference (\ref{introchap})
 
 % General introduction of ATLAS
-In October 1992, the ATLAS collaboration, then composed of about 800 members, submited a letter of intent to the LHC Experiment Committee highlighting the design of what came to be today's ATLAS Experiment \cite{CERN:1992jvx}. From the start, ATLAS was designed to be a general-purpose experiment, optimized to search for the Higgs boson, top quark decays, and supersymmetry. In July 1997, the ATLAS Experiment was approved and by November 2008, ATLAS was the largest detector ever constructed at 44 meters long and 25 meters in diameter. By November 2009, ATLAS recorded its first proton-proton collision and by December 2010, ATLAS was first to observed the production of top quark pairs, which are the heaviest known elementary particle with a strong coupling to the Higgs boson. By July 2012, both ATLAS and the CMS Experiment successfully observed the infamous Higgs boson. ATLAS is projected to continue operation until 2035 to continue searching for standing questions from the SM. This chapter will serve as an introduction to the LHC and the ATLAS experiment.
+ATLAS was designed to be a general-purpose experiment, optimized to search for the Higgs boson, top quark decays, and supersymmetry. In July 1997, the ATLAS Experiment was approved and by November 2008, ATLAS was the largest detector ever constructed at 44 meters long and 25 meters in diameter. By November 2009, ATLAS recorded its first proton-proton collision and by December 2010, ATLAS was first to observed the production of top quark pairs, which are the heaviest known elementary particle with a strong coupling to the Higgs boson. By July 2012, both ATLAS and the Compact Muon Spectrometer (CMS) experiment successfully observed the Higgs boson \cite{ATLASHiggs, CMSHiggs}. ATLAS is projected to continue operation until 2035 to continue searching for standing questions from the SM. This chapter will serve as an introduction to the LHC, the ATLAS detector, and upgrades occuring for the HL-LHC.
 
 \section{The Large Hadron Collider}
+The LHC is a two-ring-superconducting-hadron accelerator and collider built outside of Geneva, Switzerland at the Conseil Europeen pour la Recherche Nucleaire (CERN) \cite{LHCDesignReport}. It was approved for construction in 1996 to search for beyond the SM physics at energies larger than 10 TeV. It's approval was heavily influenced by the cost-saving idea of reusing the existing 26.5 km tunnels from the Large Electron-Positron (LEP) collider \cite{EvansBryant2008}. The LHC has four main collision points that house the ATLAS, CMS, Large Hadron Collider beauty (LHCb) \cite{LHCb}, and A Large Ion Collider Experiment (ALICE) \cite{ALICE}. ATLAS and CMS are the two high-energy experiments located at diametrically opposite straight sections. LHCb is a low luminosity experiment dedicated to investigate the difference between matter and anti-matter by detecting b quarks. ALICE is an ion experiment dedicated to studying quark-gluon plasma forms. 
 
+The LHC is initially supplied with protons from the injector complex, which is a sequence of accelerators shown in Figure \ref{fig:CERN-complex}. The three main components within each of these accelerators are magnets, vacuum chambers, and radiofrequency (RF) cavities. Superconducting magnets are responsible for guiding the beams, and vacuum chambers ensure that particles do not interact with external residual gas molecules. RF cavities are metallic chambers located inside the beam vacuum. They are designed to resonate at specific frequencies to provide small energy boosts when particles pass through. 
+\begin{figure}
+\centerline{\includegraphics[height=95mm]{ch2_images/CCC-v2022.png}}
+\caption[CERN Complex]{The CERN accelerator complex \cite{Lopienska}.}
+\label{fig:CERN-complex}
+\end{figure}
+
+As of Run 3, the LHC has collided protons at a center of mass energy of $\sqrt{s} = 13.6$ TeV  and a peak instantaneous luminosity of $L = 2.1 \times 10^{34} cm^{-2}s^{-1}$, which have surpassed original design. Beams are delivered in bunches with bunch separation of 25 ns, corresponding to a bunch crossing frequency of 40 MHz. 
 
 \section{The ATLAS Apparatus}
-To do this, ATLAS has six different detecting subsystems wrapped concentrically in layers around the collision point to record the trajectory, momentum, and energy of particles. Apart, a hurge magnet system bends the paths of the charged particles so that their momenta can be measured as precisely as possible. Overall, the detector tracks and identifies particles to investigate a wide range of physics. 
+The ATLAS detector, shown in Figure \ref{fig:ATLAS-detector}, consists of a collection of subsystems confined in a 46m long, 25m in diameter cylinder, 100m below ground. The first subsystem is the Inner Detector (ID), which is responsible for tracking charged-particles. A calorimeter system follows and measures the energy loss of the particles passing through the detector. The final subsystem is the Muon Spectrometer (MS), which measures the deflection of muons within a magnetic field using a trigger and high precision tracking chambers. Additionally, a first-level and high-level trigger system is implemented to select interesting events and record them to disk.
+\begin{figure}
+\centerline{\includegraphics[height=95mm]{ch2_images/0803012_01.jpg}}
+\caption[ATLAS Schematics]{Computer generated image of the whole ATLAS detector \cite{ATLASSchematics}.}
+\label{fig:ATLAS-detector}
+\end{figure}
 
+ATLAS uses a cylindrical coordinate system $(r, \eta, \phi)$ for detector design, reconstruction and data analysis. The polar coordinates, $(r, \phi)$, point in the plane towards the center of the LHC ring and upwards. The pseudorapidity, $\eta$, is defined in Equation \ref{eq:pseudorapidity}, where $\theta$ is the polar angle and equal to the true rapidty defined in Equation \ref{eq:truerapidity}.
+\begin{equation}
+	\eta = -\ln(\tan{\frac{\theta}{2}})
+\label{eq:pseudorapidity}
+\end{equation}
+\begin{equation}
+	y = \frac{1}{2}\ln{(\frac{E + p_z}{E - p_z})}
+\label{eq:truerapidity}
+\end{equation}
+The ID tracks particles in the range $|\eta| < 2.5$, the calorimeter system covers $|\eta| < 4.9$, and the MS detects muon in the $|\eta| < 2.7$ range. 
 
+\subsection{The Inner Detector}
+The main components of the ID are the Pixel Detector, Semiconductor Tracker (SCT), and the Transition Radiation Tracker (TRT). This layout is provided in Figure \ref{fig:ID}. The Pixel Detector is first to pick up the energy deposits of the collisions at a precision of $10 \mu m$. Their signals determine the origin and momentum of the particles. The SCT surrounds the Pixel Detector, which measures particle tracks with a precision of up to 25 $\mu m$. The TRT is the final layer that provides particle type information, in combination with the other information gained in the ID.
+\begin{figure}
+\centerline{\includegraphics[height=95mm]{ch2_images/0803014_01.jpg}}
+\caption[ATLAS ID Schematics]{Computer generated image of the ATLAS inner detector \cite{ATLASID}.}
+\label{fig:ID}
+\end{figure}
 
-\subsection{Inner Detector}
-what is its main functions
-\subsubsection{Pixel Detector}
-\subsubsection{Semiconductor Tracker}
-\subsubsection{Transition Radiation Tracker}
-
-\subsection{Calorimeter}
-\subsubsection{Liquid Argon Calorimeter}
-\subsection{Tile Hadronic Calorimeter}
+\subsection{Calorimeter Systems}
+Calorimeters are detectors that measure the energies and positions of charged and neutral electromagnetically or strongly interacting particles. They consists of highly-dense materials that force particles to deposit their energy. That energy is then converted into a measurable signal using layers of "active" media. The calorimeter systems consists of two types of calorimeters as shown in Figure \ref{fig:calorimeters}: electromagnetic and hadronic. Electromagnetic calorimeters are used to measure charged particles like electrons, positrons, and photons. Hadronic calorimeters are designed to detect hadrons, such as quarks, protons, and neutrons. 
+\begin{figure}
+\centerline{\includegraphics[height=95mm]{ch2_images/0803015_01.jpg}}
+\caption[ATLAS Calorimeter System]{Computer generated image of the ATLAS Liquid Argon \cite{Calorimeters}.}
+\label{fig:calorimeters}
+\end{figure}
 
 \subsection{Muon Spectrometer}
-\subsubsection{Thin Gap Chambers}
-\subsubsection{Resistive Plate Chambers}
-\subsubsection{Monitored Drift Tubes}
-\subsubsection{Small-Strip Thin-Gap}
-\subsubsection{Micromegas}
+The muon spectrometer, shown in Figure \ref{fig:spectrometer}, is the outer part of the ATLAS detector, designed to measuring the momentum of muons. Muons are minimally ionizing particles, meaning they can travel to the edge and beyond the ATLAS detector. The magnetic field that bends their directeries is generated by superconducting air-core toroidal magnets. There are also three stations of precision chambers consisting of layers of Monitored Drift Tubes (MDTs). The MDTs allow muons to knock out electrons from gas when passing through, to produce a signal. The New Small Wheels (NSW) sit in these endcap regions to detect charged-particle background that get produced as luminosity increases. Two chambers sit sorounding the central region and ends of the experiment: the Resistive Plate Chambers (RPCs) and Thin Gap Chambers (TGCs). They both detect muons when they ionise the gas mixtures to generate signal. 
+\begin{figure}
+\centerline{\includegraphics[height=95mm]{ch2_images/0803017_01.jpg}}
+\caption[ATLAS Muon Spectrometer]{Computer generated image of the ATLAS Muons subsystems \cite{MuonSpectrometer}.}
+\label{fig:spectrometer}
+\end{figure}
 
 \subsection{Magnet System}
-\subsubsection{Central Solenoid Magnet}
-\subsubsection{Barrel Toroid}
-\subsubsection{End-cap Toroids} 
+The two main magnet systems are the Central Solenoid Magnet and the Toroid Magnets. Generally, superconducting magnets are required to bend the directories of charged particles, allowing for the ATLAS detector to to measure their momentum and charge. The Central Solenoid Magnet  provides a 2 Tesla magnetic field surrounding the inner detector. The Toroid Magnets are located at the ends of the experiment, and a massive toroid magnet surrounds the center of the experiment. As mentioned in the previous section, the magnets at the ends of the experiment are to bend muons for the Muon spectrometer.
 
-\section{ATLAS Trigger System}
-\subsection{First-Level Hardware Trigger}
-\subsection{Second-Level Hardware Trigger}
+\subsection{ATLAS Trigger System}
+The ATLAS Trigger system is a collection of electronics that make rapid decisions of saving certain events into disk. There are two trigger subsystems that help selectively read out and store data from interesting physics events. The first level of the trigger system, called the L1 trigger, uses reduced-granularity information from the calorimeters and muon system to search for signatures of these events. The maximum L1 accept rate is 100 kHz, meaning all processing for an event must be completed within that time window. The second level of the trigger system, called L2 trigger, performs a more thorough reconstruction in just 200 $\mu s$ of the events passed in L1 to then finally pass to a data storage system for offline analysis. 
 
+\section{HL-LHC and HL-ATLAS}
+The HL-LHC was proposed in 2010 to extend the discovery potential of the LHC by increasing its instantaneous luminosity (rate of collisions) by a factor of five beyond the original design value and the integrated luminosity (total number of collisions) by a factor ten. Increasing the total number of collisions will increase the probability for ATLAS and CMS to observe rare processes at higher precision, as highlighed in reference \cite{HL-LHC_ATLAS_CMS}. The HL-LHC configuration relies on innovations in accelerator technology such as cutting edge 11 to 12 Tesla superconducting magnets, novel magnet designs, compact superconducting RF cavities for beam rotation with phase control, new technologies and materials for beam collimation, and high-current superconducting links with almost zero energy dissipation. 
+
+The ATLAS experiment will also require an upgrade following the HL-LHC. New sub-detectors will be installed such as the Inner Tracker \cite{InnerTracker}, the High Granularity Timing Detector \cite{HGTD}, and additional Muon chambers \cite{MuonChamber}. There will also be different electronics upgrades such as the Liquid Argon Calorimeter \cite{LAr}, the Tile Calorimeter \cite{TileCalo}, the Muon Spectrometer \cite{MuonSpecup}, and the Trigger and Data Acquition (TDAQ) system \cite{TDAQ}. 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 

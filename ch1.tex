@@ -1,38 +1,17 @@
 \chapter{Introduction}		% chapter 1
 \label{introchap}		% for reference (\ref{introchap})
-Our current understanding of the building blocks of our universe is summarized with one model, called the Standard Model (SM). From the way we power our cities, to the particles that hold them together, the SM explains how the basic building blocks of matter interact, governed by the four fundamental forces: gravity, electromagnetism, the strong force and the weak force. Yet, questions remain about the SM, such as why are there only three generations of fundamental particles? What is the nature of dark matter and dark energy, and how does it fit within the SM? What about the origin of the matter-antimatter asymmetry? Is there a unification theory for the fundamental forces? Is the SM complete or do other exotic particles exists? Over the years, experimental particle physicists and engineers have built technology to test the SM, either by performing precision measurements of particles and their behaviors, or by colliding particles and measuring their outputs. As a result, we have increased our confidence in the SM theory, but continue to search for answers for these remaining questions through experimental discovery.  
+Our current understanding of the building blocks of our universe is summarized with one model, called the Standard Model (SM)  \cite{Mann:2010nvj}. From the way we power our cities, to the particles that hold them together, the SM explains how the basic building blocks of matter interact, governed by fundamental forces: electromagnetism, the strong force and the weak force. Yet, questions remain about the SM, such as is there a unification theory that includes gravity? Why are there only three generations of fundamental particles? What is the nature of dark matter and dark energy, and how does it fit within the SM? What about the origin of the matter-antimatter asymmetry?  Is the SM complete or do other exotic particles exists? Over the years, experimental particle physicists and engineers have built technology to test the SM, either by performing precision measurements of particles and their behaviors, or by colliding particles and measuring their outputs. As a result, we have increased our confidence in the SM theory, but continue to search for answers for these remaining questions through experimental discovery.  
 
-A Toroidal LHC Apparatus (ATLAS) is a particle physics experiment designed to detect the high-energy particle collisions from the Large Hadron Collider (LHC). At the LHC, collisions take place at a rate of more than a billion interactions per second, which is a combined data volume of about 60 million megabytes per second. In order to study rare processes, the LHC will have a major upgrade to increase the number of collisions by a factor of 5 to 7.5. This upgrade, called the High-Luminosity LHC (HL-LHC), will require a new data storage format that can handle this increase in data.
+A Toroidal LHC Apparatus (ATLAS) \cite{CERN:1992jvx} is a particle physics experiment designed to detect the high-energy particle collisions from the Large Hadron Collider (LHC) \cite{LHCDesignReport}. At the LHC, collisions take place at a rate of more than a billion interactions per second, which is a combined data volume of about 60 million megabytes per second \cite{ATLAS_website}. In order to extend its discovery potential, the LHC will have a major upgrade to increase the number of instantaneous collision rate. This upgrade, called the High-Luminosity LHC (HL-LHC) \cite{HL-LHC}, will require a new data storage format that can handle this increase in data.
 
-RNTuple is the new ROOT data storage format that will be in use at the start of the HL-LHC. Due to its design, which takes advantage of modern C++ techniques, it is set to improve read speedability and memory usage compared to its predecessor, TTree, and other data storage formats such as HDF5 and Parquet. At the start of this work, performance studies on RNTuple were conducted at the production level, and RNTuple was still at an experimental stage. 
+RNTuple \cite{ROOTsRNTuple} is the new ROOT \cite{ROOT} data storage format that will be in use at the start of the HL-LHC \cite{Blomer2020}. RNTuple takes advantage of modern C++ techniques, which have shown to improve read speedability and memory usage when compared to its predecessor, TTree, and other data storage formats such as HDF5 and Parquet \cite{RNTuple:ParquetHDF5}. RNTuple is curently under heavy development. Its base format has only recently left the experimental stage and many tools and capabilities built around it are still evolving.
 
-This thesis investigates the performance of RNTuple for ATLAS analysis workflows. This chapter will provide a more detail introduction of the SM, followed by an introduction to the ATLAS experiment and its detector technology in Chapter 2. In Chapter 3, the ATLAS software and computing system, and data contents are introduced. In Chapter 4, an introduction to RNTuple and TTree is provided along with examples of how RNTuple is applied in comparison to TTree. Performance studies conducted for RNTuple and how they compare with TTree will be presented in Chapter 5. In Chapter 6, the Analysis Grand Challenge (AGC) is introduced along with its RNTuple implementation. A final discussion and conclusions are given in Chapter 7.
+This thesis investigates the performance of RNTuple for ATLAS analysis workflows. This chapter will provide a more detailed introduction of the SM, followed by an introduction to the ATLAS experiment and its detector technology in Chapter 2. In Chapter 3, the ATLAS software and computing system, and data contents are introduced. In Chapter 4, an introduction to RNTuple and TTree is provided along with examples of how RNTuple is applied in comparison to TTree. Performance studies conducted for RNTuple and how they compare with TTree will be presented in Chapter 5. In Chapter 6, the Analysis Grand Challenge (AGC) is introduced along with its RNTuple implementation. A final discussion and conclusions are given in Chapter 7.
 
-\section{Standard model of particle physics}
-The SM is a quantum field theory that explains and catagorizes all observed fundamental particles by their properties and interactions. Quantum field theory (QFT) is the main theoretical tool for describing particle interactions by combining special relativity and quantum mechanics. Due to this combination, QFT is a probabilistic theory where each particle has an associated field that permeates all of space; therefore, forces are simply the interactions between these different fields. For example, the electromagnetic force is just the interaction between the electromagnetic field and charged matter fields, which fall under quantum electrodynamics (QED). In sum, the SM encompasses all known elementary particle interactions, except for gravity, through a collection of quantum field theories, and each are dictated by gauge symmetries: QED ($U(1)$), the Glashow-Weinberg-Salam theory of electroweak processes ($SU(3)$), and quantum chromodynamics ($SU(2) \times U(1)$).
+\section{Phenomenology at the LHC}
+The SM is a quantum field theory that explains and catagorizes all observed fundamental particles by their properties and interactions. Quantum field theory (QFT) is the main theoretical tool for describing particle interactions by combining special relativity and quantum mechanics. Due to this combination, QFT is a probabilistic theory where each particle has an associated field that permeates all of space; therefore, forces are simply the interactions between these different fields. For example, the electromagnetic force is just the interaction between the electromagnetic field and charged matter fields, which fall under quantum electrodynamics (QED). In sum, the SM encompasses all known elementary particle interactions, except for gravity, through a collection of quantum field theories: QED, the Glashow-Weinberg-Salam theory of electroweak processes, and quantum chromodynamics.
 
-\subsection{Symmetries and Particle Content}
-In physics, symmetries are fundamental because they lead to conservation laws through Noether's Theorem. Symmetries can manifest in two notions: invariance and covariance. Properties of a system are described as invariant if they do not change under a symmetry transformation. For example, rotating a sphere and without altering gravitational force would indicate a conservation of angular momentum. In contrast, covariance is used to describe a system that changes in accordance to changes induced by symmetry transformations. 
-
-The SM is a gauge theory based on the symmetry group $SU(3)_C \times SU(2)_L \times U(1)_Y$. Gauge theory is a QFT that requires invariance under continous transformations, and a symmetry group is a set objects that obey the four properties listed in Table \ref{group_axioms}. $SU(3)_c$ is the color symmetry group describing the strong nuclear force, which is the intraction between quarks and gluons. $SU(2)_L \times U(1)_Y$ describes the electromagnetic and weak nuclear forces, which is the interactions between leptons, photons and $W^\pm$/$Z^0$ bosons. 
-% axioms of a group from Robert Mann book 
-\begin{table}[htb]
-\caption[Properties of a Group.]{\label{group_axioms}
-Properties of a Group \cite{Mann:2010nvj}.
-}
-\begin{center}
-\begin{tabular}{ m{4cm} m{6cm} m{5.5cm} }
-\hline
-CLOSURE & If $g_1, g_2 \in G \rightarrow g_1 \diamond g_2 \in G$ & (combinations remain in the set) \\
-IDENTITY & There exists $I \in G  \rightarrow I \diamond g_i = g_i$ for every $g_i \in G$ & (one element does nothing) \\
-INVERSE & Every $g_i \in G$ has a $g_i^{-1} \in G$ such that $g_1 \diamond g_i^{-1} = I$ & (combinations can be undone) \\
-ASSOCIATIVITY & If $g_1, g_2, g_3 \in G \rightarrow (g_1 \diamond g_2) \diamond g_3 = g_1 \diamond (g_2 \diamond g_3)$ & (combinational groupings can be interchanged) \\ 
-\hline
-\end{tabular}
-\end{center}
-\end{table}
-
-Furthermore, the four groups of particles shown in Figure \ref{fig:SM_wikid}: quarks, leptons, gauge bosons, and scalar bosons, can be further categorized as \emph{bosons} or \emph{fermions} because of a fundamental property called spin. Similar to the Earth, particles carry orbital angular momentum and spin angular momentum; however, for particles, spin is an intrinsic property. All bosons carry an integer spin; while, fermions carry half-integer spin. As a result from QFT, each fermion has an antiparticle with the same mass and lifetime as the particle itself, but oppositely charged. The three charged leptons ($e$, $\mu$, $\tau$) are massive, while their corresponding nuetrinos ($\nu_e$,$\nu_{\mu}$,$\nu_{\tau}$), are massless with nuetral charge. Due to QCD, there are 8 types of gluons. The Higgs boson has its own section as a scalar boson because unlike the vector bosons with spin 1, the Higgs boson has spin 0. In sum, there are a total of 12 leptons including their antiparticles, 36 quarks including all the flavors and their antiparticles, 12 vector bosons, and 1 scalar boson, which makes a total of 61 fundamental particles.
+The four groups of particles shown in Figure \ref{fig:SM_wikid}: quarks, leptons, gauge bosons, and scalar bosons, can be further categorized as \emph{bosons} or \emph{fermions} because of a fundamental property called spin. Similar to the Earth, particles carry orbital angular momentum and spin angular momentum; however, for particles, spin is an intrinsic property. All bosons carry an integer spin; while, fermions carry half-integer spin. As a result from QFT, each fermion has an antiparticle with the same mass and lifetime as the particle itself, but are oppositely charged. The three charged leptons ($e$, $\mu$, $\tau$) are massive, while their corresponding nuetrinos ($\nu_e$, $\nu_{\mu}$, $\nu_{\tau}$), are massless with nuetral charge. Due to QCD, there are 8 types of gluons. The Higgs boson has its own section as a scalar boson because unlike the vector bosons with spin 1, the Higgs boson has spin 0. In sum, there are a total of 12 leptons including their antiparticles, 36 quarks including all the flavors and their antiparticles, 12 vector bosons, and 1 scalar boson, which makes a total of 61 fundamental particles.
 % Standard Model Figure
 \begin{figure}
 \centerline{\includegraphics[height=95mm]{ch1_images/Standard_Model_of_Elementary_Particles.png}}
@@ -40,19 +19,16 @@ Furthermore, the four groups of particles shown in Figure \ref{fig:SM_wikid}: qu
 \label{fig:SM_wikid}
 \end{figure}
 
-\section{Electroweak Symmetry Breaking}
-In 1961, Glashow proposed a unified framework for weak and electromagnetic interactions, modeled by the the gauge group $SU(2) \times U(1)$. This gauge group is the combination of two gauge theories: the three $W_\mu^\alpha$ wavefunctions which obey a set of Yang-Mills equations \cite{YangMills1954}, and the $B_\mu$ wavefunctions which obeys a Maxwell equations. However, disparities arised between the strength of the two interactions because the weak force is short-ranged, implying that its mediators, the $W^\pm$ and $Z^0$ bosons must be massive. Inserting this notion into the gauge field equation destroys $U(1)$ guage invariance. 
-
-In 1963, Higgs, Brout Englert and others \cite{Higgs1964a} \cite{Higgs1964b} \cite{EnglertBrout1964} \cite{GuralnikHagenKibble1964} \cite{Higgs1966}, suggested a resolution to this problem by introducing a scalar particle called the Higgs boson. By altering the gauge theory to include the Higgs boson, gauge invariance is preserved at the consequence of spontaneous symmetry breaking. Spontaneous symmetry breaking is where the ground state of the system breaks the original symmetries, but the system remains invariant under transformations otherwise. Through spontaneous symmetry breaking, the coupling of scalar fields and vector bosons can now occur. Meaning that the $Z^0$ and $W^\pm$ bosons now obtain a mass while the photon remains massless, such that the electromagnetic $U(1)$ symmetry remains unbroken. This phenomenon is called the Higgs mechanism. In 2012 the ATLAS and Compact Muon Solenoid (CMS) collaborations observed the Higgs bosons with a mass of 125 GeV, as seen in Figure \ref{fig:Higgs} \cite{ATLASHiggs} \cite{CMSHiggs}.
-% maybe add paragraph of Higgs discovery
-\begin{figure}
-\centerline{\includegraphics[height=95mm]{ch1_images/Higgs.jpg}}
-\caption[Higgs ]{The distributions of the invsriant mass of diphoton candidates after all selections for the combined 7 TeV and 8 TeV data sample. Below is the weighted version of the same sample \cite{ATLASHiggs}.}
-\label{fig:Higgs}
-\end{figure}
-
-\section{Phenomenology of Large Hadron Colliders}
-As previously mentioned, the symmetries found in the SM are followed by conservation laws through Noether's Theorem, which can be experimentally verified. Collider experiments serve as probes to the SM because they directly test those conservation laws through the detection of final state radiation. To produce elementary particles, high energies are required for two particles to collide one another. In other words, increasing the energy of the particles increases the available phase space for new particle production. As shown in Figure \ref{fig:SM_cross-sections}, cross-sections can be thought of as probabilities for an interaction or process to occur.  
+Collider experiments serve as probes to the SM because they directly test conservation laws through the detection of final state radiation. In colliders, two beams of particles are accelerated to reach high energies and brought together for collision. Each collision is called an event and specific interactions or transformations are called processes. Processes are governed by conservation laws, such as conservation of energy and charge. For example, due to the conservation of energy, the energy in the center of mass frame must be greater than the sum of masses of the produced particles. When high-energy charged particles pass through matter, they ionize atoms along their path, which then serve as "seeds" for cloud chambers or sparks for sparks chambers. Their classification is then calculated by the energy differences detected from those "seeds". For neutral particles, their reconstruction is calculated using the conservation of momentum. Through QFT, the rate of a process, called cross-sections, can be predicted via the particle kinematics, their properties, and the properties of the process. Experimentally, cross-sections can be calculated via Equation \ref{eq:cross-section}, where $N$ is the number of events for the process being measured and $L$ is the instantaneous luminosity, defined in Equation as \ref{eq:luminosity}. 
+\begin{equation}
+	\sigma = \frac{N}{\int L dt}
+\label{eq:cross-section}
+\end{equation}
+\begin{equation}
+	L = f \frac{n_1 n_2}{4\pi\sigma_x\sigma_y}
+\label{eq:luminosity}
+\end{equation}
+$f$ is the frequency of collisions, $n_1$ and $n_2$ are the number of particles in the colliding bunches. $\sigma_x$ and $\sigma_y$ are the root-mean-squared horizontal and vertical beam sizes. Figure \ref{fig:SM_cross-sections} displays the predicted cross-sections for certain processes and the required center of mass energies for those processes to be observed.
 \begin{figure}
 \begin{subfigure}{0.5\textwidth}
 \includegraphics[width=0.9\linewidth, height=6cm]{ch1_images/SMSummary.png}
@@ -66,20 +42,13 @@ As previously mentioned, the symmetries found in the SM are followed by conserva
 \label{fig:SM_cross-sections}
 \end{figure}
 
-The final state radiation of those collisions are then detected and verified by conservation laws. When high-energy charged particles pass through matter, they ionize atoms along their path, Ions then as as "seeds" for cloud chambers or sparks for sparks chambers. Their classification is then calculated by the energy differences detected from those "seeds. Neutral particles are not detected but reconstructed by calculating the conservation of momuentum of a particular process.  
-
-Along from energy and momentum conservation, the other conservation principles include electric charge, baryon number, and lepton number.  Electric charge is the physical property of matter that causes it to experience a force when placed in an electromagnetic field. Baryon number is defined by 
+\section{Physics Quantities}
+This section will cover some relavant physics quantities. 
+\subsection{Invariant Mass}
+Invariant mass is a quantity that characterizes a system's total energy and momentum independent of the overall motion of the system \cite{invariant_mass}. Due to special relativity, space and time coordinates are linked but dependent on a frame of reference. Lorentz transformations are used to convert coordinates from reference frame to another, and 4-vectors are used to simplify these transformations \cite{4-vectors}. A 4-vector is a vector in spacetime with 4 quantities, such as the position 4-vector with quantities x,y,z, and time. There is also the 4-momentum vector with energy and momentum in x, y, and z directions as quantities. These 4-vectors are convenient because invariant quantities can be calculated by taking the sum of their quantities squared. Invariant mass is calculated using Equation \ref{eq: invariant_mass}, where $p_x, p_y, p_z$ is momentum in the x, y, z directions and $E$ is energy.
 \begin{equation}
-B = \frac{1}{3} (n_q - n_{\overline{q}})
+m = \sqrt{\sum E^2 - \sum p_x^2 - \sum p_y^2 - \sum p_z^2}
 \end{equation}
-where $n_q$ and $n_{\overline{q}}$ is the number of quarks and antiquarks in a particle. For example protons have a baryon number of +1 while mesons (two quarks) and leptons have a baryon number of 0. Lepton number is defined by
-\begin{equation}
-L = n_l - n_{\overline{l}}
-\end{equation}
-where $n_{l}$ and $n_{\overline{l}}$ are the number of leptons and antileptons. There are also lepton family numbers defined as $L_e, L_\mu, L_\tau$ for the electron and electron neutrino, muon and muon neutino, and tau and tau neutrino respectively. Feynman diagrams elegantly encompasses the conservation principles that are then confirmed experimentally. An example is shown in Figure BLAH. 
-
-\section{Standard Model Limitations}
-
 %%% Local Variables: 
 %%% TeX-master: "mythesis"
 %%% End: 
