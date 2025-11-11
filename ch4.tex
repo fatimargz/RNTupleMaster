@@ -1,33 +1,101 @@
-\chapter{RNTuple}		
-\label{fourthchapter}
-% Introduction of RNTuple and why we need it
-RNTuple is the new columnar data format that will be implemented at the start of the HL-LHC. It's design continues to be columnar based, as its predecessor TTree, but it now uses modern storage technologies for better performance charactersitics in data compactness, scalability and read and write speed. For this reason RNTuple classes are backwards-incompatible to TTree both on the file format level and on the API level \cite{RNTupleSpecs2025}. It's binary format version follows an \emph{epoch.major.minor.path} scheme, where \emph{epoch} indicates backward-incompatible changes, \emph{major} indicates forward-incompatible changes, \emph{minor} indicates new optional format features, and \emph{patch} indicates backported features from newer format verions. This chapter will introduce the RNTuple structure and user interfaces (UI) for different workflows using the first public release of RNTuple 1.0.0.0.
-
-\section{Data Structure}
-RNTuple organizes data using an internal BLOB-based data layout and an external metadata schema. A BLOB (binary large object) is a collection of binary data stored as a single entity. For example, instead of embedding data directly into a database, data can be stored as a BLOB along with a unique identifier for later retreival. This is beneficial for managing large unstructured data \cite{GoogleCloud}. RNTuple uses a similar approach internally: Data is organized by columns of a single type and are attached to \emph{fields}, which describes a serialized C++ type. Columns are partitioned into \emph{pages}. Pages are compressed individually, similar to TTree baskets. \emph{Clusters} are sets of pages that contain all the data belonging to an entry range. \emph{Envelopes} are data blocks that contain metadata, such as field and columns types, cluster descriptions, and page locations. Overall, this structure allows for random-access of individual events without decompressing the entire dataset and for "fast merging" or concatenating RNTuples. A simplified diagram of the RNTuple structre in comparison to TTree is shown in Figure \ref{fig:RNTupleStructure}. 
+In this chapter, RNTuple performance is analyzed using RDataFrame and compared to TTree. First, 92 TTrees stored in \texttt{DAOD\_PHYSLITE} files from ATLAS Open Data were converted to RNTuples using its default compression algorithm setting, ZSTD. An average size reduction of about 47\% was observed between the converted RNTuples and the original TTrees, as shown in Figure \ref{fig:conversionsize}. Speed tests were performed for loading and outputting RNTuples in comparison to TTrees using \texttt{std::chrono::high\_resolution\_clock::now()}. Each performance study contains two versions: a TTree version that uses TTree inputs and an RNTuple version that uses RNTuple inputs. A comparison of peak memory consumption was also performed using both sets of inputs. The entirety of this analysis was repeated for RNTuple inputs that were converted with LZ4 compression algorithm. 
 \begin{figure}
-\centerline{\includegraphics[width=\textwidth,height=90mm]{ch4_images/SerhanScreenshotRNTupleStructure.png}}
-\caption[RNTupleStructure]{TTree Structure vs. RNTuple Structure \cite{Serhan}.}
-\label{fig:RNTupleStructure}
+\centerline{\includegraphics[height=95mm]{ch4_images/RNT_TTree_size_comparisons.png}}
+\caption[TTree vs. RNTuple Sizes]{The RNTuple:TTree file size ratios over number of events per file.}
+\label{fig:loading}
 \end{figure}
 
- \section{UI}
-RNTuple API is compatible with RDataFrame analysis workflows and hand-written event loops \cite{Blomer2020}. The sections below will provide further details and examples.  
+\section{Readability Speed}
+The total loading times for 92 RNTuples and their TTree equivalence were measured 100 times to ensure consistency. Loading multiple RNTuples in RDataFrame follows an identical procedure in both TTree and RNTuple versions (seen previously in 3.3.2). The timer began at the start of the script and was stopped after calculating the sum of the column "\texttt{AnalysisElectronsAuxDyn:pt}". This was done to ensure that the data was being loaded and read by RDataFrame. The measured times were recorded onto a text file and are shown in Figure \ref{fig:loading}. In comparison to TTree, this study finds RNTuple to be 2.38 times faster at loading a column of data. 
+\begin{figure}
+\centerline{\includegraphics[height=95mm]{ch4_images/LoadingHistograms.png}}
+\caption[Distribution of Total Loading Times]{Total loading times measured for TTree and RNTuple using RDataFrame in C++.}
+\label{fig:loading}
+\end{figure}
 
-\subsection{C++}
-For hand-written event loops, RNTuple interface uses smart pointers, which simulates a pointer while providing automatic memory management \cite{smartpointer}. This feature shortens the amount of code necessary to read and load data by a couple of lines. For example \texttt{RNTupleReader::Open} simultaneously loads the ROOT file and the RNTuple. The function \texttt{GetView} also simultaneously loads and stores a field. In the example below, the RNTuple is called "EventData" and the field is being stored into the object \texttt{electron\_pt}, which is the transverse momentum of electrons, "AnalysisElectronsAux:pt".
+\section{Writing Speed}
+\label{sec:writing}
+Writing speed was measured by performing an invariant mass calculation and outputting a new dataset with two columns: "\texttt{ElectronPairsInvMass}" and "\texttt{MuonPairsInvMass}". The timer began at the start of an invariant mass calculation and stopped after creating a new dataset. A TTree was written for the TTree version and an RNTuple was written for the RNTuple version. The quick function that outputs a TTree in RDataFrame, \texttt{df.Snapshot(...)}, is currently not developed to output an RNTuple yet; therefore, for consistency, both versions of the script uses the RDataFrame function \texttt{df.ForEach(...)} to loop through events and fill in the new columns. This procedure for RNTuple and TTree versions is shown in Figure \ref{fig:writing-procedure}.
+\begin{figure}[h!]
+\begin{subfigure}{\linewidth}
+\centerline{\includegraphics[width = 0.8\linewidth]{ch4_images/ttree-writing.png}}
+\caption{TTree Version.}
+\end{subfigure}
+\begin{subfigure}{\linewidth}
+\centerline{\includegraphics[width=0.8\linewidth]{ch4_images/writing_rnt.png}}
+\caption{RNTuple Version.}
+\end{subfigure}
+\caption[Writing a Two Column Output Algorithm Using RDataFrame in C++]{TTree vs. RNTuple writing algorithms using the RDataFrame function \texttt{df.ForEach(...)} in C++.}
+\label{fig:writing-procedure}
+\end{figure}
 
-\begin{lstlisting}[language=C]
-auto ntuple = RNTupleReader::Open("EventData", "DAOD_PHYSLITE.pool.root");
-auto electron_pt = ntuple->GetView<std::vector<float>("AnalysisElectronsAux:pt");
-\end{lstlisting}
+The total output times were recorded in a text file and are shown in Figure \ref{fig:writing}. RNTuple is shown to be 1.51 times faster at writing datasets than when using TTrees. 
+\begin{figure}
+\centerline{\includegraphics[height=95mm]{ch4_images/OutputHistograms.png}}
+\caption[Distribution of Total Writing Times]{Total writing times measured for TTree and RNTuple using RDataFrame in C++.}
+\label{fig:writing}
+\end{figure}
 
-\subsection{RDataFrame}
-Analysis done with RDataFrame will mostly remain unmodified with RNTuple, with the exception of filtering. Due to RNTuple's internal data structure, subfields such as "AnalysisElectronsAux:pt" are separated by their field, "AnalysisElectronsAux" by a column, instead of a period. This slight change confuses the filtering function in RDataFrame, but can be bypassed by assigning an alias name: 
+\section{Output Sizes}
+The file sizes of the outputs written were measured to check if RNTuple has a consistent size reduction behavior at this analysis level. By error, the outputs produced initially contained empty events; however, this brought some insights on RNTuple when compared to "cleaned" outputs that filtered out empty events. The results shown in Table \ref{table:dirty}, reveal that RNTuple provides a 99\% event size reduction to TTree when the outputs written include empty events. This implies that RNTuple is handling repeated bits significantly better than TTree. Table \ref{table:clean} reveals a 63\% reduction from RNTuple when eliminating the empty events. The latter result is considered a more practical or realistic for an analysis; yet, these results can open an opportunity to write data and approach analysis workflows differently. 
+\begin{table}[htb]
+\caption[File Size and Avg. Event Size of UnFiltered Output]{\label{table:dirty}
+File size and averaged compressed event size for TTree and RNTuple outputs with empty events. The total number of unfiltered events written is 9,045,000 events.}
+\begin{center}
+\begin{tabular}{ m{4cm} m{4cm} m{4cm} }
+\hline
+DataFormat & File Size & Average Compressed Event Size \\
+\hline
+TTree & 48 086 740 & ~ 5.31 \\
+RNTuple & ~ 447 414 & ~ 5.31 \\
+\hline
+\end{tabular}
+\end{center}
+\end{table}
 
-\begin{lstlisting}[language=C]
-auto df = ROOT::RDF::RNTuple("EventData", "DAOD_PHYSLITE.pool.root");
-auto new_df = df.Alias("electron_pt", "AnalysisElectronsAux:pt");
-std::string analysis_cut = "(electron_pt.size()>=1&&electron_pt.at(0)>25000";
-auto filtered_df = new_df.Filter(analysis_cut);
-\end{lstlisting}
+\begin{table}[htb]
+\caption[File Size and Avg. Event Size of Filtered Output]{\label{table:clean}
+File size and averaged compressed event size for TTree and RNTuple outputs without empty events. The total number of filtered events is 77,411 events.}
+\begin{center}
+\begin{tabular}{ m{4cm} m{4cm} m{4cm} }
+\hline
+DataFormat & File Size & Average Compressed Event Size \\
+\hline
+TTree & 791 428 & ~ 5.31 \\
+RNTuple & 288 529 & ~ 5.31 \\
+\hline
+\end{tabular}
+\end{center}
+\end{table}
+
+\section{Memory Consumption}
+Peak memory usage was measured for RNTuple and TTree python versions of the script used in 4.2. Peak memory usage was measured with the command \texttt{usr/bin/time}. Results shown in Figure \ref{fig:peak-memory} demonstrate no significant difference in this case study between RNTuple and TTree.
+\begin{figure}
+\centerline{\includegraphics[height=95mm]{ch4_images/memory_bargraph.png}}
+\caption[Peak Memory Usage: Writing Two Column Output]{Peak memory usage while producing an output with two columns. Measurements were taken 100 times for each version.}
+\label{fig:peak-memory}
+\end{figure}
+
+\section{LZ4 Compression Algorithm Study}
+Studies have shown that LZ4 improves reading and writing speeds for TTree, but at the cost of larger files. This section will investigate if this behavior is consistent with RNTuple by repeating the loading and writing measurements. The same 92 ATLAS Open Data files were used to produce RNTuple equivalents with the LZ4 compression algorithm specified. The ratio of the LZ4 RNTuple sizes over the RNTuples produced with ZSTD are shown in Figure \ref{fig:lz4-sizes}. They reveal that the LZ4 algorithm increases the RNTuple file sizes by an average of 14\% from ZSTD. 
+\begin{figure}
+\centerline{\includegraphics[height=95mm]{ch4_images/LZ4_size_comparisons.png}}
+\caption[Per-file Compression Ratios of LZ4:ZSTD Over Total Number of Events]{Per-file compression ratios of LZ4:ZSTD over total number of events.}
+\label{fig:lz4-sizes}
+\end{figure}
+
+\subsection{Loading Time Measurements}
+Time measurements for loading the electron transverse momenta column are shown in Figure \ref{fig:lz4-loading}. There are no significant differences between reading with LZ4 or ZSTD RNTuples. 
+\begin{figure}
+\centerline{\includegraphics[height=95mm]{ch4_images/LoadingHistograms_rntuplesLZ4.png}}
+\caption[Distribution of Loading Times Using LZ4 Inputs]{Loading time measurements for RNTuples produced by the LZ4 and ZSTD algorithms, and for TTree. The RNTuples composed with ZSTD and LZ4 only differ by a couple of milliseconds.}
+\label{fig:lz4-loading}
+\end{figure}
+
+\subsection{Writing Time Measurements}
+Writing time measurments, shown in Figure \ref{fig:lz4-writing} reveal a 2 second difference between LZ4 and ZSTD algorithms. 
+\begin{figure}
+\centerline{\includegraphics[height=95mm]{ch4_images/OutputHistograms_LZ4.png}}
+\caption[Distribution of Writing Times Using LZ4 Inputs]{Writing time measurments for RNTuples produced by the LZ4 and ZSTD algorithms, and TTree.}
+\label{fig:lz4-writing}
+\end{figure}

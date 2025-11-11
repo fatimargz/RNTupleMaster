@@ -1,60 +1,54 @@
-\chapter{RNTuple vs. TTree}		
-\label{fifthchapter}
-In this section, RNTuple performance is analyzed using RDataFrame in C++ and compared to TTree. First, 92 TTrees stored in \texttt{DAOD\_PHYSLITE} files from ATLAS Open Data \cite{ATLASOpenData} were converted to RNTuples using its default compression algorithm setting, ZSTD. Speed tests were performed for loading and outputting RNTuples in comparison to TTrees using \texttt{std::chrono::high\_resolution\_clock::now()}. Each performance study contains two version: a TTree version that uses TTree inputs and an RNTuple version that uses the RNTuple inputs. A comparison of peak memory consumption was also performed using both sets of inputs. This entire process was repeated for RNTuple inputs converted with LZ4 compression algorithm as well. 
+The Analysis Grand Challenge (AGC) is an analysis on top quark production meant to showcase an end-to-end analysis pipeline. Developed and organized by Iris-HEP, the AGC has several versions that showcase different cyber infrastructure and workflows, making it a great benchmark to test RNTuple. This section will describe the development of two new AGC versions that use ATLAS Open Data and RDataFrame: TTree and RNTuple versions. These versions were heavily influenced on the existing RDataFrame AGC repository that applies CMS open data and the uproot AGC repository that applies ATLAS open data.  
 
-\section{Readability Speed}
-The total loading times for 92 RNTuples and their TTree equivalence were measured 100 times. Loading multiple RNTuples in RDataFrame is the same procedure as done for the TTree version: 
+\section{RDataFrame Analysis Workflow}
+The AGC is divided into two parts: an analysis script and a statistical script. The analysis scripts are written in Python and uses RDataFrame to apply preselections and output histograms of the top quark mass and the scalr sum of the transverse momenta,$H_T$, into a ROOT file. The statistical script performs a simple statistical analysis using the output ROOT file from the analysis script.
 
-\begin{lstlisting}[language=C]
-std::string path = "path_to_files";
-std::vector<std::string> filenames;
-for (const auto& entry: std::filesystem::directory_iterator(path)){
-	std::string filename = entry.path().filename().string();
-	filenames.push_back(entry.path().string());
-}
-auto df = ROOT::RDF::FromRNTuple("EventData", filenames);
-\end{lstlisting}
- 
- The timer was stopped after calculating the sum of the column "\texttt{AnalysisElectrons:pt}" to ensure that the data was loaded. These times were recorded into a text file and are shown in Figure \ref{fig:loading}. In comparison, this study finds RNTuple to be 2.38 times faster at loading a column of data over TTree. 
+The inputs used for the AGC are the same 92 ROOT file from ATLAS Open Data, as described in 3.1. Specifically, there are 22 singletop samples, 10 $t\overline{t}$ samples, and 60 W and jets samples.
+
+\subsection{Event Selections}
+To reconstruct the top quark mass, events are selected from top quark pair production with final states that include a single charged lepton, as shown in Figure \ref{fig:ttbar}. The leptons must have $p_t$ larger than 30 GeV and $|\eta|$ less than 2.1 Events must include four jets, with two of the four being b-tagged. The other two jets are from the W boson decay. The top mass observable is then reconstructed by taking the invariant mass of the trijet with the largest transverse momentum,$p_t$. The results are shown in Figure \ref{fig:top-mass} and \ref{fig:Ht}.
 \begin{figure}
-\centerline{\includegraphics[height=95mm]{ch5_images/LoadingHistograms.png}}
-\caption[Loading Histogram Times]{Total loading times measured for TTree and RNTuple using RDataFrame in C++.}
-\label{fig:loading}
+\centerline{\includegraphics[height=95mm]{ch6_images/ttbar.png}}
+\caption[Top and Anti-top Quark Collision]{The schematic view of a top and anti-top quark collision \cite{Alex}}
+\label{fig:ttbar}
 \end{figure}
 
-\section{Writing Speed}
-\label{sec:writing}
-Writing speed was measured by performing an invariant mass calculation and outputting a new data set with two columns: "\texttt{ElectronPairsInvMass}" and "\texttt{Muon PairsInvMass}". The timer began at the start of an invariant mass calculation and stopped after creating a new dataset. A TTree was written for the TTree version and an RNTuple was written for the RNTuple version. At the start of this study, the lazy function that outputs a TTree in RDataFrame, \texttt{df.Snapshot(...)} was not developed to output an RNTuple; therefore, for consistency, both versions of the script used the RDataFrame function \texttt{df.ForEach(...)} to fill in the new columns. This procedure for RNTuple is shown below:
-
-\begin{lstlisting}[language=C]
-auto model = RNTupleModel::Create();
-auto e_invm = model->MakeField<ROOT::VecOps::RVec<float>>("ElectronPairsInvMass"); 
-auto m_invm = model->MakeField<ROOT::VecOps::RVec<float>>("MuonPairsInvMass");
-auto ntuple = RNTupleWriter::Recreate(std::move(model), "FatisRNTuple", "rnt_invm.root");
-df_leptons.Foreach([&](ROOT::VecOps:RVec<float> e_vals, ROOT:VecOps::RVec<float> m_vals){
-	*e_invm = e_vals;
-	*m_invm = m_vals; ntuple->Fill();
-}, {"invm_electrons","invm_muons"});
-\end{lstlisting}
-
-The total output times were recorded in a text file and are shown in Figure \ref{fig:writing}. RNTuple is shown to be 1.51 times faster at writing datasets in RDataFrame C++ than when using TTrees. 
 \begin{figure}
-\centerline{\includegraphics[height=95mm]{ch5_images/OutputHistograms.png}}
-\caption[Output Histogram Times]{Total writing times measured for TTree and RNTuple using RDataFrame in C++.}
-\label{fig:writing}
+\centerline{\includegraphics[height=95mm]{ch6_images/trijet_mass_prefit-2.pdf}}
+\caption[The Trijet Mass Prefit]{The trijet mass prefit. This result is the same for both RNTuple and TTree versions of the AGC.}
+\label{fig:top-mass}
 \end{figure}
 
-\subsection{Output Sizes}
-After checking the disk sizes of the RNTuple outputs produced and comparing them to their TTree counterparts, RNTuple 
-
-\section{Memory Consumption}
-The peak memory usage when writing out a dataset was also measured for RNTuple and TTree versions. The same procedure using the invariant mass calculation was repeated 100 times, but using the command \texttt{usr/bin/time}.Shown in Figure \ref{fig:MemoryInvm}, 
-\begin{figure}, measurmeents taken show that RNTuple varies slightly from TTree. 
-
-\centerline{\includegraphics[height=95mm]{ch5_images/memory_histogram_invm.png}}
-\caption[Memory Measurements]{Peak memory measurments of TTree and RNTuple writing scripts [NOTE FOR FATIMA: CONSISTENT HISTOGRAM SHADING].}
-\label{fig:MemoryInvm}
+To plot the $H_T$ observable, the selected events must have at least one b-tagged jet among the four jets and exactly one lepton. The results are shown in Figure \ref{fig:Ht}.
+\begin{figure}
+\centerline{\includegraphics[height=95mm]{ch6_images/Ht_prefit-3.pdf}}
+\caption[Ht]{The $H_T$ observable prefit. This result is the same for both RNTuple and TTree versions of the AGC.}
+\label{fig:Ht}
 \end{figure}
 
-\section{Compression Algorithms Study}
-[Under Construction]
+\section{TTree vs. RNTuple AGC}
+Both TTree and RNTuple versions of the AGC produced the results shown in Figure \ref{fig:top-mass} and \ref{fig:Ht}, confirming that analysis done in RDataFrame with RNTuple will mostly remain unmodified. As previously mentioned, RNTuple only changes the structure of variable field names; therefore, alias variable names were applied to both TTree and RNTuple versions for consistency. 
+
+\subsection{Timing Measurements}
+Total execution times were measured 100 times for both TTree and RNTuple versions using the time Python library. Both versions used inputs produced with the ZSTD compression algorithm. The results, shown in Figure \ref{fig:AGC-time}, show that RNTuple averaged 47.58 seconds to produce the top quark mass and $H_T$ histograms into a ROOT file, while TTree averaged 71.75 seconds. RNTuple was about 1.51 times faster, which is consistent with previous time measurements shown in Chapter \ref{fourthchapter}.
+\begin{figure}
+\centerline{\includegraphics[height=95mm]{ch6_images/TimeDistribution.png}}
+\caption[Distribution of AGC Execution Times]{The total execution times of the AGC measured 100 times for TTree and RNTuple versions.}
+\label{fig:AGC-time}
+\end{figure}
+
+\subsubsection{LZ4 vs. ZSTD Input Files}
+The total execution times were remeasured using RNTuple inputs produced with the LZ4 compression algorithm. As shown in Figure \ref{fig:AGC-LZ4}, LZ4 executes the AGC analysis script only about a couple seconds faster. 
+\begin{figure}
+\centerline{\includegraphics[height=95mm]{ch6_images/TimeDistribution_LZ4.png}}
+\caption[Distribution of AGC Execution Times using LZ4 Inputs]{The total execution times of the AGC measured 100 times with RNTuples produced with the LZ4 compression algorithm.}
+\label{fig:AGC-LZ4}
+\end{figure}
+
+\subsection{Memory Consumption}
+Peak memory usage was measured using \texttt{/usr/bin/time}. The results shown in Figure \ref{fig:memory-AGC}, show that RNTuple consumes slightly less memory usage than TTree when executing the AGC analysis script.
+\begin{figure}
+\centerline{\includegraphics[height=95mm]{ch6_images/memory_histogram.png}}
+\caption[AGC Peak Memory Usage]{The peak memory usage when executing the AGC.}
+\label{fig:memory-AGC}
+\end{figure}
