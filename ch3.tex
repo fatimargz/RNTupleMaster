@@ -1,103 +1,81 @@
-The data collected from the ATLAS data acquisition system must be compared to a set of simulated data. This dataset aims to mimic the different physics processes: it's production by the colliding beams, the evolution of the collision products within the detector and materials, and the detector's response to ultimately interpret efficiencies and background processes. Except for collision data, the output of all these data processing steps are stored in ROOT files. It starts off with Monte Carlo (MC) simulations, which is a computational technique that uses random sampling to generate events. Given these events, the interactions within the detector and the detector's response is simulated. This reconstructed product is called an Analysis Object Data (AOD), which are then cleaned by compressing the data and cutting any unnecessary events or columns into a finalized product called Derived AOD (DAOD). The products produced at each step are then stored into a compressed binary file, called a ROOT file, and are validated using different software tools. These tools collectively encompass the software framework called Athena \cite{atlas2019athena}. The flow of this process is display in Figure \ref{fig:DataChain}. This chapter will provide an introduction to ATLAS Open Data \cite{ATLAS_OpenData_DAODPHYSLITE_2015_2016}, ROOT, and its application programming interface (API) for TTree and RNTuple formats.
+The data collected from the detector must be compared to a set of simulated data in order to interpret efficiencies and background processes. These data sets aim to mimic different physics processes such as the events produced by the collider beams, the evolution of the collision products within the detector and materials, and the detector's response. The preparation of simulation starts off with Monte Carlo (MC) simulation, which is a computational technique that uses random sampling to generate events. Given these events, the interactions within the detector and the detector's response are simulated. This reconstructed product is called an Analysis Object Data (AOD), which are then cleaned by compressing the data and cutting any unnecessary events or columns into a finalized product called Derived AOD (DAOD). The products produced at each step are then stored into a compressed binary file, called a ROOT file, and are validated using different software tools. The software framework that encompasses the tools needed to produce, validate, and analyze all of these types of samples is called Athena \cite{ATLAS_Athena_Zenodo_3932810}. The flow of this process, compared to the similar process followed by collision data, is shown in Figure \ref{fig:DataChain}. 
+
 \begin{figure}[ht]
 \centerline{\includegraphics[height=95mm]{ch3_images/datachain.png}}
-\caption[DataChain]{ATLAS data chain-processing for data and Monte Carlo simulation \cite{ATLAS_Catmore_2020_DataProcessingChain}.}
+\caption[Data Chain]{ATLAS data chain-processing for data and Monte Carlo simulation \cite{ATLAS_Catmore_2020_DataProcessingChain}.}
 \label{fig:DataChain}
 \end{figure}
 
+The studies for this thesis use data at the analysis level. This chapter will introduce ATLAS Open Data \cite{ATLAS_OpenData_DAODPHYSLITE_2015_2016}, ROOT, and the data structures of TTree versus RNTuple. It will also provide a comparison between the application programming interface (API) for the TTree and RNTuple formats.
+
 \section{ATLAS Open Data}\label{sec:opendata}
-ATLAS Open Data is a publicly available dataset produced by the ATLAS collaboration. It's composed of MC simulations of particle collisions within the ATLAS detector and detector data measurements. The data used as inputs for the remainder of this study are MC simulations of top nominal samples from Run 2 \cite{ATLAS_OpenData_DAODPHYSLITE_MC_2024, ATLAS_OpenData_DAODPHYSLITE_EW_2024}. They are simulated processes that produce single top quarks, matter-antimatter $t\overline{t}$ pairs, and W boson production in association with jets. Representative diagrams for these processes are shown in Figure \ref{fig: samples}.
-% \begin{figure}[ht]
-% \centering
-% \sbox0{%}
-% \begin{subfigure}[b]{0.48\textwidth}
-% 	\centering
-% 	\includegraphics[width=.6\linewidth, height=55mm]{ch3_images/tchan.pdf}
-% 	\caption{Single top quark production.}
-% \end{subfigure}
-% }
-% \begin{minipage}[c][\dimexpr\ht0 + 7mm\relax]{0.48\textwidth}
-%     \centering
-%     \usebox0
-% \end{minipage}
-% \begin{minipage}[c][\dimexpr\ht0+7mm\relax][s]{0.48\textwidth}
-%     % Top right diagram
-%     \begin{subfigure}{\linewidth}
-%         \centering
-%         \includegraphics[width=.8\linewidth, height=40mm]{ch3_images/ttbar.pdf}
-%         \caption{Matter-antimatter $t\overline{t}$ pair production.}
-%     \end{subfigure}
+ATLAS Open Data is a publicly available dataset produced by the ATLAS collaboration. It's composed of MC simulations of particle collisions within the ATLAS detector and detector data measurements. The data used as inputs for the remainder of this study are MC simulations of top samples from Run 2 \cite{ATLAS_OpenData_DAODPHYSLITE_MC_2024}. They are simulated samples of single top quarks, matter-antimatter $t\overline{t}$ pairs, and W boson production in association with jets. Representative diagrams for these processes are shown in Figure \ref{fig: samples}.
 
-%     \vfill
-
-%     % Bottom right diagram
-%     \begin{subfigure}{\linewidth}
-%         \centering
-%         \includegraphics[width=.8\linewidth, height=40mm]{ch3_images/vjets.pdf}
-%         \caption{W+Jets production.}
-%     \end{subfigure}
-
-% \end{minipage}
-% \vspace{30mm}
-% \caption[DataChain]{The representative diagrams of the processes used in this thesis.}
-% \label{fig:samples}
-% \end{figure}
 \begin{figure}
 \centerline{\includegraphics[width=.8\textwidth]{ch3_images/samples.png}}
-\caption[DataChain]{The representative diagrams of the processes used in this thesis.}
+\caption[Data Chain]{The representative diagrams of the processes used in this thesis.}
 \label{fig: samples}
 \end{figure}
 
-
-The inputs are all provided in PHYSLITE format, which contains already-calibrated objects directly from an AOD or PHYS product \cite{ATLAS_Collaboration_2023_PHYSLITE}. Those objects include jets, electrons, muons, photons, taus and their kinematics, such as transverse momentum, mass, charge, eta, and phi. Each event contains a number of physical objects that depends on the underlying process, resulting in a multidimensional dataset. A full description of the variables can be found in \cite{ATLAS_OpenData_PHYSLITE_Docs}.
+The inputs are all provided in DAOD\_PHYSLITE format, which contains already-calibrated objects directly from an AOD or PHYS product \cite{ATLAS_Collaboration_2023_PHYSLITE}. Those objects include jets, electrons, muons, photons, taus and their properties, such as momentum, mass, charge, eta, and phi. Each event contains a number of physical objects that depends on the underlying process, resulting in a multidimensional dataset. A full description of the variables can be found in \cite{ATLAS_OpenData_PHYSLITE_Docs}.
 
 \section{ROOT}
 % history of ROOT
-ROOT is a unified software package developed for processing, analyzing, visualizing and ultimately storing the massive high-energy physics datasets into ROOT files. Previously, high-energy experiments used FORTRAN-based libraries; however, an upgrade was needed to handle the scales and complexities of the data from the LHC. ROOT maintains an object-oriented structure, meaning it is organized around the data rather than the functions and logic. It's features include visualization tools such as histogramming, and statistical tools. ROOT can be used in C++ and python languages. Several sub packages exists for analysis such as RDataFrame.
+ROOT is a unified software package developed for processing, analyzing, visualizing and ultimately storing the massive high-energy physics datasets. Previously, high-energy experiments used FORTRAN-based libraries; however, an upgrade was needed to handle the scales and complexities of the data from the LHC \cite{Brun:2296392}. ROOT maintains an object-oriented structure, meaning it is organized around the data rather than the functions and logic. Its features include visualization tools such as histogramming, and statistical tools. ROOT can be used in C++ and Python languages. ROOT’s declarative analysis interface (RDataFrame \cite{ROOT_RDataFrame_class}) is used extensively in this thesis, both in Python and in C++.
 
 \subsection{ROOT Compression Algorithms}
-ROOT offers four different compression algorithms: \texttt{ZLIB}, \texttt{LZMA}, \texttt{LZ4}, and \texttt{ZSTD} \cite{Marcon:2024zsm}. Data compression allows users to store large files at reduced sizes without losing information from the original file. It can also increase data reading and writing speeds. There are generally two types of compression algorithms: lossless and lossy. Lossy algorithms reduce files at more depth and are irreversible processes. The four compression algorithms from ROOT are lossless algorithms, meaning they are reversible processes that reduce bits by eliminating statistical redundancy.  
+ROOT offers four different compression algorithms: \texttt{ZLIB}, \texttt{LZMA}, \texttt{LZ4}, and \texttt{ZSTD} \cite{Marcon:2024zsm}. Data compression allows users to store large files at reduced sizes without losing information from the original file. It can also increase data reading and writing speeds. There are generally two types of compression algorithms: lossless and lossy. Lossy algorithms can reduce file sizes with larger compression factors, but are irreversible processes, meaning that information is lost during compression. The four compression algorithms from ROOT are lossless algorithms, meaning they are reversible processes that reduce bits by eliminating statistical redundancy.  
 
-There are advantages and disadvantages in each of the four algorithms. \texttt{LZ4} focuses on compression and decompression speed, yet provides large files. \texttt{LZMA} provides higher compression at the cost of significantly slower reading speeds. \texttt{ZLIB} is an older version of \texttt{ZSTD}. Both provide a balance between compression and reading speeds; however, \texttt{ZSTD} has been shown to perform better in all metrics in comparison to ZLIB \cite{BockelmanShadura_2021_ZstdLZ4}. The input data applied for this study were all produced with \texttt{ZSTD}. A comparison study between \texttt{ZSTD} and \texttt{LZ4} is performed for RNTuple versions of the inputs, shown in Chapter \ref{fourthchapter}.
+There are advantages and disadvantages in each of the four algorithms. \texttt{LZ4} focuses on compression and decompression speed, yet offers smaller compression factors and thus larger file sizes. \texttt{LZMA} provides higher compression at the cost of significantly slower reading speeds. \texttt{ZLIB} is an older version of \texttt{ZSTD}. Both provide a balance between compression and reading speeds; however, \texttt{ZSTD} has been shown to perform better in all metrics in comparison to ZLIB \cite{BockelmanShadura_2021_ZstdLZ4}. The default compression algorithm used to generation RNTuple samples is \texttt{ZSTD}. In Chapter \ref{fourthchapter}, a performance study using RNTuples produced with \texttt{LZ4} is shown for comparison.
 
 \subsection{TTree Data Structure}
-ROOT provides a data structure called TTree to store large amounts of columnar data efficiently. Usually scientific data is stored in what we call row-oriented formats such as a spreadsheet or CSV table. This format is well organized if one wants to access a single event, but viewing a single column then becomes inefficient, especially with large datasets. A TTree is columnar based, meaning it consists of a list of independent columns, called branches. Examples of branches can be event IDs or particle kinematics such as momentum in the x, y, z coordinates. Branches can hold integers, strings and std::vector data types. Buffers are automatically allocated behind each branch. Buffers are temporary storage areas for the independent binary version of the object. This is done to efficiently handle the writing and reading of the data to and from disk. Each branch has one or more baskets, which manages the in-memory buffer. In other words, a basket holds the values of a branch for a number of consecutive events. When a buffer is full, it is optionally compressed and then the corresponding basket is written to disk, leading to the creation of a new basket to hold the next entries. ROOT allows users to change buffersize parameters of the branch for personalized optimization. Figure \ref{fig:TTreeDataStructure} shows a more detailed flowchart of the TTree data structure.
+ROOT provides a columnar-based data structure called TTree to efficiently store data. The columnar-based format allows users to access independent columns of data, such as event IDs or particle kinematics, versus accessing information per event. Internally, the physical data of each column are stored as Binary Large Objects (BLOBs), which are compressed blocks of serialized values. These BLOBs are stored in containers called TBaskets, each holding the data for a consecutive range of entries. Each column of data has a corresponding TBranch object that stores metadata. The metadata describes the column, such as the column's data type and serialization rules, and if the columns has subcomponents, which are represented by associated TLeaf objects. For I/O (Input/Output) efficiency, TTrees group consecutive entries into units called clusters. 
+
+The TBranch also stores metadata containing the list of file offsets and sizes of all of its baskets. ROOT uses these offsets and sizes to implicitly address the TBaskets and ultimately, decompress it and return the corresponding column data to the user. Figure \ref{fig:TTreeDataStructure} shows a more detailed flowchart of the TTree data structure.
 \begin{figure}[ht]
 \centerline{\includegraphics[height=130mm, width=.65\textwidth]{ch3_images/TTreeDataStructure.png}}
-\caption[TTree Data Structure]{Example of the TTree Data Structure \cite{ROOT_TTree_v6-30}.}
+\caption[TTree Data Structure]{Representation of the TTree Data Structure \cite{ROOT_TTree_v6-30}.}
 \label{fig:TTreeDataStructure}
 \end{figure}
 
 \subsection{RNTuple Data Structure}
-RNTuple is the new columnar data format that will be implemented at the start of the HL-LHC. It's design continues to be columnar based, as its predecessor TTree, but it now uses modern storage technologies for better performance characteristics in data compactness, scalability, and read and write speed. For this reason, RNTuple classes are backwards-incompatible to TTree both on the file format level and API level \cite{ROOT_RNTuple_BinaryFormatSpecification}. It's binary format version follows an \emph{epoch.major.minor.path} scheme, where \emph{epoch} indicates backward-incompatible changes, \emph{major} indicates forward-incompatible changes, \emph{minor} indicates new optional format features, and \emph{patch} indicates backported features from newer format versions. The remainder of this study uses the first public release of RNTuple 1.0.0.0.
+RNTuple is the new columnar data format that will be implemented at the start of the HL-LHC. Its design continues to be columnar based, as its predecessor TTree, but it now uses modern storage technologies for better performance characteristics in data compactness, scalability, and read and write speed. For this reason, RNTuple classes are backwards-incompatible to TTree both on the file format level and API level \cite{ROOT_RNTuple_BinaryFormatSpecification}. Its binary format version follows an \emph{epoch.major.minor.path} scheme, where \emph{epoch} indicates backward-incompatible changes, \emph{major} indicates forward-incompatible changes, \emph{minor} indicates new optional format features, and \emph{patch} indicates backported features from newer format versions. The remainder of this study uses the first public release of RNTuple 1.0.0.0.
 
-RNTuple organizes data using an internal BLOB-based data layout and an external metadata schema. A BLOB (binary large object) is a collection of binary data stored as a single entity. For example, instead of embedding data directly into a database, data can be stored as a BLOB along with a unique identifier for later retrieval. This is beneficial for managing large unstructured data \cite{GoogleCloud_BLOBstorage}. RNTuple uses a similar approach internally: Data is organized by columns of a single type and are attached to \emph{fields}, which describes a serialized C++ type. Columns are partitioned into \emph{pages}. Pages are compressed individually, similar to TTree baskets. \emph{Clusters} are sets of pages that contain all the data belonging to an entry range. \emph{Envelopes} are data blocks that contain metadata, such as field and columns types, cluster descriptions, and page locations. Overall, this structure allows for random-access of individual events without decompressing the entire dataset and for "fast merging" or concatenating RNTuples. A simplified diagram of the RNTuple structure in comparison to TTree is shown in Figure \ref{fig:RNTupleStructure}. 
+RNTuple separates logical schema from physical layout explicitly. Unlike TTree, RNTuple has an \emph{anchor}, which is a top-level metadata object that describes the schema, columns, and how the physical data is stored. Each column has a corresponding \emph{field}, which is an RNTuple object that maps the column to its physical storage location. Each column's data is stored in fixed-size units called \emph{pages}. Pages are the containers that hold the actual serialized BLOBs. Pages are grouped into larger units called \emph{clusters}, which define the granularity at which metadata and I/O decisions are made. Each cluster contains an \emph{envelope}, which are metadata blocks describing the physical locations of all the pages in that cluster. Inside envelopes are \emph{RBLOB} keys, which are the lowest-level object that hold the physical offset and size of a single page or multiple pages of the same cluster. Using RBLOB keys, RNTuple can explicitly locate, read, and decompress pages back to the user. A flow chart of this process in comparison to TTree is shown in Figure \ref{fig:RNTupleFlow}
+
+Overall, this structure allows for more efficient random-access of individual events in comparison to TTree. For TTree, metadata is spread-out and stored in each individual TBranch; therefore,  its access pattern is more tightly coupled to sequential iteration. For RNTuple, the separation of the logical schema and physical layout allows for explicit addressing of the data and improves data compactness. 
+
 \begin{figure}[ht]
-\centerline{\includegraphics[width=\textwidth,height=90mm]{ch3_images/SerhanScreenshotRNTupleStructure.png}}
-\caption[RNTuple Data Structure]{TTree Structure vs. RNTuple Structure \cite{ATLAS_Mete_Nowak_VanGemmeren_2024_RNTuple}.}
-\label{fig:RNTupleStructure}
+\centerline{\includegraphics[width=\textwidth,height=100mm]{ch3_images/TTreevsRNTupleDataStructures.png}}
+\caption[TTree vs. RNTuple Mapping]{TTree versus RNTuple mapping systems.}
+\label{fig:RNTupleFlow}
 \end{figure}
 
 \section{TTree vs. RNTuple API}
-TTree's API is natively compatible with C++, RDataFrame analysis workflows in Python and C++, and the uproot library \cite{uproot}. At this stage, RNTuple's API is best compatible with RDataFrame analysis workflows and hand-written event loops. It currently has limited capabilities with the uproot library. For example, functions in uproot that read or concatenate multiple RNTuples are still under development, as are the functions for writing RNTuple outputs. As part of this project, an effort was made to test and document the capabilities, usage and best practices of RNTuple in a physics analysis context during its development. The corresponding code repository, including the aforementioned documentation can be found in \cite{Rodriguez_2025_RNTupleWorkflows}. The sections below will provide examples of RNTuple's API in comparison to TTree's. 
+The first portion of this thesis aimed to test RNTuple API against TTree using ATLAS analysis workflows. Efforts were made to document the capabilities, usage and best practices of RNTuple during its development. The corresponding code repository, including the aforementioned documentation can be found in \cite{Rodriguez_2025_RNTupleWorkflows}. The sections below will provide examples of RNTuple's API in comparison to TTree's, using native C++ event loops, RDataFrame, and Uproot \cite{uproot}. 
 
 \subsection{Native C++ Event Loops}
 Due to the multidimensional nature of particle physics data, event loops are common algorithms used in data analysis workflows. It is a process that continuously iterates through the large datasets to apply specific analysis steps to each event. As seen in Figure \ref{fig:eventloop-ttree}, users must iterate through TTree in order to load branches and define an empty pointer object to store their entries.
-\begin{figure}[h!]
-\centerline{\includegraphics[width=.8\textwidth,height=100mm]{ch3_images/ttree.png}}
-\caption[C++ Event Loop with TTree]{Native C++ event loop using TTree. This script loads a PHYSLITE ROOT file containing a TTree titled "CollectionTree", and plots the distribution electron transverse momenta.}
-\label{fig:eventloop-ttree}
-\end{figure}
 
-The RNTuple interface uses smart pointers, which simulates a pointer while providing automatic memory management \cite{Smart_Pointer_Wikipedia}. This feature shortens the amount of code necessary to read and load data by a couple of lines. For example \texttt{RNTupleReader::Open} simultaneously loads the ROOT file and the RNTuple, as seen in Figure \ref{fig:eventloop-rnt}. The function \texttt{GetView} also simultaneously loads and stores a field. 
+The RNTuple interface uses smart pointers, which simulate a pointer while providing automatic memory management \cite{Smart_Pointer_Wikipedia}. This feature shortens the amount of code necessary to read and load data by a couple of lines. For example \texttt{RNTupleReader::Open} simultaneously loads the ROOT file and the RNTuple, as seen in Figure \ref{fig:eventloop-rnt}. The function \texttt{GetView} also simultaneously loads and stores a field.
+
 \begin{figure}[ht]
+\begin{subfigure}{\linewidth}
+\centerline{\includegraphics[width=.8\textwidth,height=100mm]{ch3_images/ttree.png}}
+\caption{Native C++ event loop using TTree.}
+\label{fig:eventloop-ttree}
+\end{subfigure}
+\begin{subfigure}{\linewidth}
 \centerline{\includegraphics[width=\textwidth,height=90mm]{ch3_images/rntuple.png}}
-\caption[C++ Event Loop with RNTuple]{This is the RNTuple version of Figure \ref{fig:eventloop-ttree}.}
+\caption{Native C++ event loop using RNTuple.}
 \label{fig:eventloop-rnt}
+\end{subfigure}
+\caption{These scripts load a DAOD\_PHYSLITE file containing a TTree in (a) and an RNTuple in (b) to plot the distribution of electron transverse momenta. Transverse momentum is the momentum perpendicular of the colliding beams.}
 \end{figure}
 
 \subsection{RDataFrame in C++ and Python}
-Analysis done with RDataFrame will mostly remain unmodified with RNTuple, as shown in Figure \ref{fig:rdfpython}, with the exception of filtering. Due to RNTuple's internal data structure, sub fields such as "\texttt{AnalysisElectronsAuxDyn:pt}" are separated by their field, "\texttt{AnalysisElectronsAuxDyn}" by a column, instead of a period. This slight change confuses the filtering function in RDataFrame, but can be bypassed by assigning an alias name. Figure \ref{fig:rdfc} provides an example of how to read multiple inputs and apply a filter using RDataFrame in C++. 
+RDataFrame is a high-level interface for analysis of data stored in TTree, RNTuple, CSV, and other data formats. RDataFrame can be used via C++ or Python languages. Analysis done with RDataFrame will mostly remain unmodified with RNTuple, as shown in Figure \ref{fig:rdfpython}, with the exception of filtering. Due to RNTuple's internal data structure, sub fields such as "\texttt{AnalysisElectronsAuxDyn:pt}" are separated by their field, "\texttt{AnalysisElectronsAuxDyn}" by a colon, instead of a period. This slight change confuses the filtering function in RDataFrame, but can be bypassed by assigning an alias name. Figure \ref{fig:rdfc} provides an example of how to read multiple inputs and apply a filter using RDataFrame in C++.
+
 \begin{figure}[ht]
 \begin{subfigure}{\linewidth}
 \centerline{\includegraphics[width = 0.8\linewidth]{ch3_images/ttree-rdf-python.png}}
@@ -124,5 +102,7 @@ Analysis done with RDataFrame will mostly remain unmodified with RNTuple, as sho
 \label{fig:rdfc}
 \end{figure}
 
+\subsection{Uproot}
+Uproot is a Python library designed to extract and manage data from ROOT files. Analysis done with Uproot will also remain unmodified with RNTuple. Users can load RNTuples and convert them into dictionaries of arrays just as with TTrees. Also, Uproot's added function, \texttt{uproot.mkrntuple}, allows users to write RNTuple outputs. Loading multiple RNTuple inputs using uproot's functions \texttt{uproot.concatenate} and \texttt{uproot.iterate} also work with RNTuple. 
 
 
