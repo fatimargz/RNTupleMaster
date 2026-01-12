@@ -1,50 +1,59 @@
-The Analysis Grand Challenge (AGC) is an analysis on top quark production meant to showcase an end-to-end analysis pipeline. Developed and organized by Iris-HEP, the AGC has several versions that showcase different cyber infrastructure and workflows, making it a great benchmark to test RNTuple. This section will describe the development of two new AGC versions that use ATLAS Open Data and RDataFrame: TTree and RNTuple versions. These versions were heavily influenced on the existing RDataFrame AGC repository that applies CMS open data and the uproot AGC repository that uses ATLAS Open Data. The full implementations of the AGC can be found in \cite{Rodriguez_2025_RNTupleWorkflow}. 
+The Analysis Grand Challenge (AGC) is a project organized by IRIS-HEP \cite{IRISHEP_Institute} designed to showcase an end-to-end analysis through a $t\overline{t}$ study. The AGC has several versions that demonstrate different cyber infrastructure and workflows, making it a great benchmark to test RNTuple. For the final part of this study, two new versions of the AGC were developed using ATLAS Open Data and RDataFrame—one with TTree inputs and another with RNTuple inputs. These versions were heavily influenced on the existing RDataFrame AGC repository that applies CMS open data \cite{ROOT_analysisGrandChallenge} and the Uproot AGC repository that uses ATLAS Open Data \cite{irishep_agcphyslite}. The newly developed AGC versions that use ATLAS Open Data and RDataframe, using TTree and RNTuple inputs can be found in \cite{Rodriguez_2025_RNTupleWorkflow}. 
 
 \section{RDataFrame Analysis Workflow}
-The AGC is divided into two parts: an analysis script and a statistical script, both written in Python. The analysis scripts uses RDataFrame to apply preselections and output histograms of the top quark mass and the scalar sum of the transverse momenta, $H_T$, into a ROOT file. The statistical script performs a simple statistical analysis using the output ROOT file from the analysis script.
-
-The inputs used for the AGC are the same 92 ROOT file from ATLAS Open Data, as described in \ref{sec:opendata}. Specifically, there are 22 single top samples, 10 $t\overline{t}$ samples, and 60 W+jets samples.
+The AGC is divided into two parts: an analysis script and a statistical script, both written in Python. The analysis script uses RDataFrame to apply preselections and output histograms of the top quark mass and the scalar sum of the transverse momenta, $H_T$, into a ROOT file. The inputs are the same 92 ROOT files from ATLAS Open Data, as described in \ref{sec:opendata}. Specifically, there are 22 single top samples, 10 $t\overline{t}$ samples, and 60 $W$+jets samples. These files were called from a local directory and stored within a large dictionary, with their corresponding metadata that include information, such as variation label. Samples with variation labeled "nominal" are the primary datasets representing the most accurate SM predictions, while those labeled "systematic" represent alternative simulated datasets in which specific parameters have been intentionally varied from their nominal values. For this study, pseudodata was used instead of measured data to calculate systematic uncertainties. The pseudodata histogram is constructed by merging the histograms from all nominal variation samples, and stochastic noise is then introduced to the count in each bin with a Gaussian distribution. The specifics of this process is defined in a JSON file and processed using the Python library, Cabinetry \cite{cabinetry_docs} in the statistical script. The statistical script uses histograms produced by the analysis script to perform a simplified fit of the MC samples to the pseudodata. It remained unchanged relative to previous AGC versions and will not be discussed further in this thesis.
 
 \subsection{Event Selections}
-To reconstruct the top quark mass, events are selected from top quark pair production with final states that include a single charged lepton corresponding to the signature of semileptonic $t\overline{t}$ events, as shown in Figure \ref{fig:ttbar}. The leptons must have $p_t$ larger than 30 GeV and $|\eta|$ less than 2.1 events must include four jets, with two of the four being b-tagged. The other two jets are from the W boson decay. The top mass observable is then reconstructed by taking the invariant mass of the trijet with the largest transverse momentum, $p_t$. To plot the $H_T$ observable, the selected events must have at least one b-tagged jet among the four jets and exactly one lepton.
+The following event selections were applied in the analysis script of the AGC. To reconstruct the top quark mass, events are selected from top quark pair production with final states that include a single charged lepton corresponding to the signature of semileptonic $t\overline{t}$ events, as shown in Figure \ref{fig:ttbar}. Events with at least four jets, two of the four being $b$-tagged are selected. Selected jets must have transverse momentum, $p_t$ greater than 30 GeV and $|\eta|$ less than 2.4. Leptons must have $p_t$ greater than 25 GeV  and $|\eta|$ less than 2.1. The top mass observable is then reconstructed by taking the invariant mass of the trijet with the largest transverse momentum. To plot the $H_T$ observable, the selected events must have at least one $b$-tagged jet among the four jets, and exactly one lepton.
+
+The results of the newly developed AGC using ATLAS Open Data are shown in Figures \ref{fig:top-mass} and \ref{fig:Ht}. Both the RNTuple and TTree versions produced the same output, confirming that analysis performed in RDataFrame using RNTuple will remain largely unmodified. As previously mentioned, RNTuple only changes the structure of variable field names; therefore, alias variable names were applied to both TTree and RNTuple versions for consistency. 
+
+\vspace{2\baselineskip}
 \begin{figure}[ht]
 \centerline{\includegraphics[height=95mm]{ch6_images/ttbar.png}}
 \caption[Top and Anti-top Quark Collision]{The schematic view of a top and anti-top quark collision \cite{Held_2022_PyHEP2022_AGC_talk}}
 \label{fig:ttbar}
 \end{figure}
+\vspace{2\baselineskip}
 
-The results of the newly developed AGC using ATLAS Open Data are shown in Figures \ref{fig:top-mass} and \ref{fig:Ht}. Both the RNTuple and TTree versions produced the same output, confirming that analysis performed in RDataFrame using RNTuple will remain largely unmodified. As previously mentioned, RNTuple only changes the structure of variable field names; therefore, alias variable names were applied to both TTree and RNTuple versions for consistency. 
 \begin{figure}[ht]
 \centerline{\includegraphics[height=95mm]{ch6_images/trijet_mass_prefit-2.pdf}}
-\caption[The Trijet Mass Prefit]{The trijet mass prefit. This result is the same for both RNTuple and TTree versions of the AGC.}
+\caption[The Trijet Mass Prefit]{The trijet mass prefit. The uncertainty band corresponds to the statistical error of the MC sample, corresponding to a total of 9,045,000 events. This result is the same for both RNTuple and TTree versions of the AGC.}
 \label{fig:top-mass}
 \end{figure}
+\vspace{2\baselineskip}
 
+\vspace{2\baselineskip}
 \begin{figure}[ht]
 \centerline{\includegraphics[height=95mm]{ch6_images/Ht_prefit-3.pdf}}
-\caption[Ht]{The $H_T$ observable prefit. This result is the same for both RNTuple and TTree versions of the AGC.}
+\caption[$H_T$]{The $H_T$ observable prefit. The uncertainty band corresponds to the statistical error of the MC sample, corresponding to a total of 9,045,000 events. This result is the same for both RNTuple and TTree versions of the AGC.}
 \label{fig:Ht}
 \end{figure}
+\vspace{2\baselineskip}
 
 \section{AGC Performance Studies}
-A performance study evaluating execution speed and memory usage was conducted for both TTree and RNTuple versions of the AGC. Total execution times were measured 100 times for each version using the Python \emph{time} library. Both versions used inputs produced with the ZSTD compression algorithm. As shown in Figure \ref{fig:AGC-time}, RNTuple averaged 47.58 seconds to produce the top quark mass and $H_T$ histograms into a ROOT file, while TTree averaged 71.75 seconds. RNTuple was approximately 1.51 times faster, consistent with previous time measurements shown in Chapter \ref{fourthchapter}. The execution times were then remeasured using RNTuples produced with the LZ4 compression algorithm. As shown in Figure \ref{fig:AGC-LZ4}, LZ4 yields a slight improvement on the order of a few seconds, which is also consistent with previous results. Peak memory usage was measured using the inputs produces with ZSTD and with \texttt{/usr/bin/time}. As shown in Figure \ref{fig:memory-AGC}, RNTuple consumes slightly less memory usage than TTree when executing the AGC analysis script.
+A performance study evaluating execution speed and memory usage was conducted for both TTree and RNTuple versions of the AGC. Total execution times were measured 100 times for each version using the Python \emph{time} library. Both versions used inputs produced with the \texttt{ZSTD} compression algorithm. As shown in Figure \ref{fig:AGC-time}, RNTuple averaged 47.58 seconds to run the analysis script that produces the top quark mass and $H_T$ histograms, while TTree averaged 71.75 seconds. RNTuple was approximately 1.51 times faster, consistent with previous time measurements shown in Chapter \ref{fourthchapter}. The execution times were then remeasured using RNTuples produced with the \texttt{LZ4} compression algorithm. As shown in Figure \ref{fig:AGC-LZ4}, \texttt{LZ4} yields a slight improvement on the order of a few seconds, which is also consistent with previous results. Peak memory usage was measured using the inputs produces with \texttt{ZSTD} and with \texttt{/usr/bin/time}. As shown in Figure \ref{fig:memory-AGC}, RNTuple consumes slightly less memory usage than TTree when executing the AGC analysis script. The statistical script uses histograms produced by the analysis script to perform a simplified fit of the MC samples to the pseudodata. It remained unchanged relative to previous AGC versions and will not be discussed further in this thesis.
+
+\vspace{2\baselineskip}
 \begin{figure}[ht]
 \centerline{\includegraphics[height=95mm]{ch6_images/TimeDistribution.png}}
 \caption[Distribution of AGC Execution Times]{The total execution times of the AGC measured 100 times for TTree and RNTuple versions.}
 \label{fig:AGC-time}
 \end{figure}
+\vspace{2\baselineskip}
 
+\vspace{2\baselineskip}
 \begin{figure}[ht]
 \centerline{\includegraphics[height=95mm]{ch6_images/TimeDistribution_LZ4.png}}
-\caption[Distribution of AGC Execution Times using LZ4 Inputs]{The total execution times of the AGC measured 100 times with RNTuples produced with the LZ4 compression algorithm.}
+\caption[Distribution of AGC Execution Times using \texttt{LZ4} Inputs]{The total execution times of the AGC measured 100 times with RNTuples produced with the \texttt{LZ4} compression algorithm.}
 \label{fig:AGC-LZ4}
 \end{figure}
+\vspace{2\baselineskip}
 
+\vspace{2\baselineskip}
 \begin{figure}[ht]
 \centerline{\includegraphics[height=95mm]{ch6_images/memory_histogram.png}}
 \caption[AGC Peak Memory Usage]{The peak memory usage when executing the AGC.}
 \label{fig:memory-AGC}
 \end{figure}
-
-
-
+\vspace{2\baselineskip}

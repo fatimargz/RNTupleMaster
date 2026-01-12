@@ -1,0 +1,114 @@
+\documentclass[12pt]{niuthesis}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{physics}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{multirow}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{braket}
+\usepackage{hyperref}
+\usepackage{pdflscape}
+\usepackage{soul}
+\usepackage{setspace}
+\usepackage{cleveref}
+\usepackage[T1]{fontenc}
+\usepackage{array}
+\usepackage{float}
+
+\usepackage{listings}
+\usepackage{xcolor}
+
+% OMIT FOR FINAL PRODUCT
+\usepackage{lineno}
+%\linenumbers
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,
+    frame=single,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2
+}
+
+\lstset{style=mystyle}
+
+\usepackage[backend=biber,backref,sorting=none]{biblatex}
+\addbibresource{main.bib}
+
+\title{RNTuple for ATLAS Analysis Workflows}
+\author{Fatima Rodriguez}
+\major{Physics}
+\degree{Thesis}{M.S.}{Master of Science}
+\degreedate{December}{2025}
+\department{Department of Physics}
+\director{Hector de la Torre Perez}
+
+\begin{document}
+
+\begin{abstract} 
+    RNTuple is the new data storage format set to replace TTree at the start of the High-Luminosity LHC. An investigation was conducted to evaluate how analysis workflows for ATLAS researchers will change with RNTuple, using reading speed, writing speed, disk space, and memory consumption as metrics. In this study, all metrics were measured using converted RNTuple inputs from ATLAS Open Data, compared to their TTree equivalents. Additionally, RNTuples produced with the \texttt{LZ4} compression algorithm were generated and compared with those produced using \texttt{ZSTD}. Finally, two new versions of the Analysis Grand Challenge (AGC) using ATLAS Open Data were completed for TTree and RNTuple inputs with RDataFrame in Python. This constitutes the first implementation of an end-to-end analysis completed using RNTuple.  
+\end{abstract}
+
+\begin{dedication}
+  Para mis padres, con toda mi gratitud por su amor y apoyo.
+\end{dedication}
+
+\begin{acknowledgments}
+  I would first like to thank my advisors: Hector, Peter, Walter, and Serhan. I feel incredibly fortunate to have had outstanding advisors over the years. I am deeply grateful for your guidance, support, and patience throughout this project. I am also very grateful for my family: Haydee, Jose Alfredo, Saul and Vivianita Rodriguez. I am very proud to be your daughter and older sister. Thank you all for encouraging me to be brave and to pursue this passion. Los quiero mucho! Many thanks to my fanbase: Mariela, Audrey, Jorge, Susan, Syriah, the Garcia Family, Emily, et al. I am so lucky to be surrounded by your beautiful friendships! Thank you all for hyping me up throughout my career. Thank you to my big sister and mentora, Dr. Arcelia Hermosillo! Meeting you was significant not only for my career but also for the friendship that I will always cherish. Thank you so much to Dr. Brendan Kiburg, Dr. Saskia Charity, and Fermilab friends for bringing me to Illinois and solidifying my passion in high energy physics! Big shout out to Net Force, the PGSA, and colleagues. It was an honor to serve as your volleyball coach! Thank you for going along with my social event ideas. As one can see, it took many communities for this accomplishment. Additional shout outs to those that propelled me here and continue to support others like me: Cal NERDs, Hispanic Engineers and Scientists, and the Latin American Graduate Student Association. Finally, I would like to acknowledge $(CP)^2$ for funding the work done in this thesis. 
+\end{acknowledgments}
+\MakeThesisPrologue 
+
+\chapter{Introduction}
+\label{firstchapter}
+\input{ch1.tex}
+
+\chapter{The ATLAS Experiment}
+\label{secondchapter}
+\input{ch2.tex}
+
+\chapter{ATLAS Software and Computing}
+\label{thirdchapter}
+\input{ch3.tex}
+
+\chapter{RNTuple vs. TTree Performance}
+\label{fourthchapter}
+\input{ch4.tex}
+
+\chapter{Analysis Grand Challenge: RNTuple vs. TTree}
+\label{fifthchapter}
+\input{ch5.tex}
+
+\chapter{Conclusion}
+\label{conclusion}
+\input{ch6.tex}
+
+\begingroup
+\setstretch{1}
+\setlength\bibitemsep{20pt}
+\addcontentsline{main.toc}{chapter}{REFERENCES}
+\printbibliography[
+    heading=bibintoc,
+    title={REFERENCES}
+]
+\endgroup
+\end{document}

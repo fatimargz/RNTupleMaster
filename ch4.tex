@@ -1,46 +1,61 @@
-In this chapter, RNTuple performance is analyzed using RDataFrame and compared to TTree. First, 92 TTrees stored in \texttt{DAOD\_PHYSLITE} files from ATLAS Open Data were converted to RNTuples using its default compression algorithm setting, ZSTD. Conversion was performed using a dedicated Athena-based procedure typically used to convert one type of ATLAS sample into another. In sum, the 92 TTrees and RNTuples each contained 9,045,000 events; however, an average disk size reduction of about 47\% was observed in the converted RNTuples compared to the original TTrees, as shown in Figure \ref{fig:conversionsize}. This set of data, which collectively occupied about 110.8 GB of disk space when stored in TTrees, now occupied about 52.5 GB when stored in RNTuples. This reduction depends on the type and size of the converted sample, but it’s relatively consistent. RNTuple encodes each column's values into uniform typed streams, which are then compressed independently into a page. For TTree, baskets mix heterogeneous data types, making compression less efficient. Due to this split-encoding process, along with RNTuple's clearer separation between logical schema and physical I/O, this disk size reduction is seen in comparison to TTree.
+In this chapter, RNTuple performance is analyzed using RDataFrame and compared to TTree using the top simulation files form ATLAS Open Data. First, 92 TTrees stored in \texttt{DAOD\_PHYSLITE} files were converted to RNTuples using its default compression algorithm setting, \texttt{ZSTD}. Conversion was performed using a dedicated Athena-based procedure typically used to convert one type of ATLAS sample into another. In sum, the 92 TTrees and RNTuples each contained 9,045,000 events; however, an average disk size reduction of about 47\% was observed in the converted RNTuples compared to the original TTrees, as shown in Figure \ref{fig:conversionsize}. This set of data, which collectively occupied about 110.8 GB of disk space when stored in TTrees, now occupied about 52.5 GB when stored in RNTuples. This reduction depends on the type and size of the converted sample, but it’s relatively consistent. RNTuple encodes each column's values into uniform typed streams, which are then compressed independently into a page. For TTree, baskets mix heterogeneous data types, making compression less efficient. The disk size reduction when converting TTrees to RNTuple can be explained primarily due to this split-encoding process, along with clearer separation between logical schema and physical I/O with RNTuple.
 
-Speed tests were performed for loading and outputting RNTuples in comparison to TTrees using \texttt{std::chrono::high\_resolution\_clock::now()}. This method is part of the standard C++ date and time library. Each performance study contains two versions: a TTree version that uses TTree inputs and an RNTuple version that uses RNTuple inputs. A comparison of peak memory consumption was also performed using both sets of inputs. The entirety of this analysis was repeated for RNTuple inputs that were converted with LZ4 compression algorithm. 
+Speed tests were performed for loading and outputting RNTuples in comparison to TTrees using \texttt{std::chrono::high\_resolution\_clock::now()}. This method is part of the standard C++ date and time library. Each performance study contains two versions: a TTree version that uses TTree inputs and an RNTuple version that uses RNTuple inputs. A comparison of peak memory consumption was also performed using both sets of inputs. The entirety of this analysis was repeated for RNTuple inputs that were converted with \texttt{LZ4} compression algorithm. 
 
-\begin{figure}[H]
-\centerline{\includegraphics[height=95mm]{ch4_images/RNT_TTree_size_comparisons.png}}
-\caption[TTree vs. RNTuple Sizes]{The RNTuple:TTree file size ratios for all samples.}
+\vspace{2\baselineskip}
+\begin{figure}[ht]
+\centerline{\includegraphics[width=\textwidth]{ch4_images/RNT_TTree_size_comparisons.png}}
+\caption[Per-file Disk Size Ratios RNTuple:TTree]{The RNTuple:TTree file size ratios for all samples.}
 \label{fig:conversionsize}
 \end{figure}
+\vspace{2\baselineskip}
 
 \section{Readability Speed}
-The total loading times for 92 RNTuples and their TTree equivalence were measured 100 times to ensure consistency. Loading multiple RNTuples in RDataFrame follows an identical procedure in both TTree and RNTuple versions (seen previously in 3.3.2). The timer began at the start of the script and was stopped after calculating the sum of the column "\texttt{AnalysisElectronsAuxDyn:pt}". This was done to ensure that the data was being loaded and read by RDataFrame. The measured times were recorded onto a text file and are shown in Figure \ref{fig:loading}. In comparison to TTree, this study finds RNTuple to be 2.38 times faster at loading a column of data. 
+The total loading times for 92 RNTuples and their TTree equivalents were measured 100 times to ensure consistency. Loading multiple RNTuples in RDataFrame follows an identical procedure in both TTree and RNTuple versions (seen previously in 3.3.2). The timer began at the start of the script and was stopped after calculating the sum of the column "\texttt{AnalysisElectronsAuxDyn:pt}". This was done to ensure that the data was being loaded and read by RDataFrame. The measured times were recorded onto a text file and are shown in Figure \ref{fig:loading}. In comparison to TTree, this study finds RNTuple to be 2.38 times faster at loading a column of data. 
+
+
+
+\vspace{2\baselineskip}
 \begin{figure}[H]
 \centerline{\includegraphics[height=95mm]{ch4_images/LoadingHistograms.png}}
 \caption[Distribution of Total Loading Times]{Total loading times measured for TTree and RNTuple using RDataFrame in C++.}
 \label{fig:loading}
 \end{figure}
+\vspace{2\baselineskip}
 
 \section{Writing Speed}\label{sec:writingspeed}
 \label{sec:writing}
 Writing speed was measured by performing an invariant mass calculation and outputting a new dataset with two columns: "\texttt{ElectronPairsInvMass}" and "\texttt{MuonPairsInvMass}". The timer began at the start of an invariant mass calculation and stopped after creating a new dataset. A TTree was written for the TTree version and an RNTuple was written for the RNTuple version. The quick function that outputs a TTree in RDataFrame, \texttt{df.Snapshot(...)}, is currently not developed to output an RNTuple yet; therefore, for consistency, both versions of the script uses the RDataFrame function \texttt{df.ForEach(...)} to loop through events and fill in the new columns. This procedure for RNTuple and TTree versions is shown in Figure \ref{fig:writing-procedure}. 
 
-\begin{figure}[h!]
+\vspace{2\baselineskip}
+\begin{figure}[ht]
 \begin{subfigure}{\linewidth}
-\centerline{\includegraphics[width = 0.8\linewidth]{ch4_images/ttree-writing.png}}
+\centerline{\includegraphics[width = 0.8\textwidth]{ch4_images/ttree-writing.png}}
 \caption{TTree Version.}
 \end{subfigure}
+
+\vspace{\baselineskip}
+
 \begin{subfigure}{\linewidth}
-\centerline{\includegraphics[width=0.8\linewidth]{ch4_images/writing_rnt.png}}
+\centerline{\includegraphics[width=0.8\textwidth]{ch4_images/writing_rnt.png}}
 \caption{RNTuple Version.}
 \end{subfigure}
 \caption[Writing a Two Column Output Algorithm Using RDataFrame in C++]{TTree vs. RNTuple writing algorithms using the RDataFrame function \texttt{df.ForEach(...)} in C++.}
 \label{fig:writing-procedure}
 \end{figure}
+\vspace{2\baselineskip}
 
 Although the procedures are the same, the RNTuple version takes up significantly less code due to RNTuple's classes. With TTree, an empty vector has to be created before writing a branch. With RNTuple, the \texttt{ROOT::RNTupleModel} class has the function \texttt{MakeField}, which creates a new field given a name and a corresponding value managed by a shared pointer. The function \texttt{RNTupleWriter::Recreate()} simultaneously creates the RNTuple and the output ROOT file. In the TTree version, both the TTree and the output file need to be defined separately. 
 
-The total output times were measured 100 times and  were recorded in a text file. The results in Figure \ref{fig:writing} show that writing with RNTuple is 1.51 times faster than with TTrees.  
-\begin{figure}[h!]
+The total output times were measured 100 times and  were recorded in a text file. The results in Figure \ref{fig:writing} show that writing with RNTuple is 1.51 times faster than with TTrees.
+
+\vspace{2\baselineskip}  
+\begin{figure}[ht]
 \centerline{\includegraphics[height=95mm]{ch4_images/OutputHistograms.png}}
 \caption[Distribution of Total Writing Times]{Total writing times measured for TTree and RNTuple using RDataFrame in C++.}
 \label{fig:writing}
 \end{figure}
+\vspace{2\baselineskip}
 
 \section{Output Sizes}
 The output file sizes were measured to determine whether RNTuple maintains a consistent size-reduction behavior at this stage of the analysis. Both outputs were produced using \texttt{ZSTD}. By error, the outputs initially produced contained empty events; however, this brought some insights on RNTuple when compared to "cleaned" outputs that filtered out empty events. The results shown in Table \ref{table:dirty} reveal that RNTuple provides a 99\% event size reduction to TTree when the outputs written include empty events. This implies that RNTuple is handling repeated bits significantly better than TTree. In other words, RNTuple has more efficient compression handling. TTree can probably achieve the same level of compression, but would require the user to explicitly optimize TBasket compression settings. Table \ref{table:clean} reveals a 63\% reduction from RNTuple when eliminating the empty events. The latter result is considered more practical or realistic for an analysis; yet, these results open an opportunity to write data and approach analysis workflows differently. 
@@ -61,6 +76,7 @@ RNTuple & 447 414 & ~ 0.049 \\
 \end{center}
 \end{table}
 \vspace{2\baselineskip}
+
 \begin{table}[htb]
 \caption[File Size and Avg. Event Size of Filtered Output]{\label{table:clean}
 File size and averaged compressed event size for TTree and RNTuple outputs without empty events. The total number of filtered events is 77,411 events.}
@@ -76,38 +92,48 @@ RNTuple & 288 529 & ~ 3.73 \\
 \end{center}
 \end{table}
 \vspace{2\baselineskip}
+
 \section{Memory Consumption}
 Peak memory usage was measured using Python versions of the writing scripts used in \ref{sec:writingspeed}. Using the command \texttt{usr/bin/time}, memory usage was measured 100 times for both TTree and RNTuple versions. For this test study, results shown in Figure \ref{fig:peak-memory} demonstrate no significant difference between RNTuple and TTree.
+
+\section{\texttt{LZ4} Compression Algorithm Study}
+Studies have shown that \texttt{LZ4} improves reading and writing speeds for TTree, but at the cost of larger files \cite{Marcon:2024zsm}. This section will investigate if this behavior is consistent with RNTuple by repeating the loading and writing measurements. The same 92 ATLAS Open Data files were used to produce RNTuple equivalents with the \texttt{LZ4} compression algorithm specified. Time measurements for loading the electron transverse momenta column are shown in Figure \ref{fig:lz4-loading}, and the time measurements for writing an RNTuple output are shown in Figure \ref{fig:lz4-writing}. There are no significant differences between reading RNTuples produces from \texttt{LZ4} or \texttt{ZSTD} algorithms; however, there is a 2 second difference between writing an RNTuple with \texttt{LZ4} versus \texttt{ZSTD}. The ratio of the \texttt{LZ4} RNTuple sizes over the RNTuples produced with \texttt{ZSTD} are shown in Figure \ref{fig:lz4-sizes}. They reveal that the \texttt{LZ4} algorithm increases the RNTuple file sizes by an average of 14\% from \texttt{ZSTD}. 
+
+\vspace{2\baselineskip}
 \begin{figure}[ht]
-\centerline{\includegraphics[height=95mm]{ch4_images/memory_bargraph.png}}
+\centerline{\includegraphics[height=95mm]{ch4_images/memory_plot.png}}
 \caption[Peak Memory Usage: Writing Two Column Output]{Peak memory usage while producing an output with two columns. Measurements were taken 100 times for each version.}
 \label{fig:peak-memory}
 \end{figure}
+\vspace{2\baselineskip}
 
-\section{LZ4 Compression Algorithm Study}
-Studies have shown that LZ4 improves reading and writing speeds for TTree, but at the cost of larger files \cite{Marcon:2024zsm}. This section will investigate if this behavior is consistent with RNTuple by repeating the loading and writing measurements. The same 92 ATLAS Open Data files were used to produce RNTuple equivalents with the LZ4 compression algorithm specified. Time measurements for loading the electron transverse momenta column are shown in Figure \ref{fig:lz4-loading}, and the time measurements for writing an RNTuple output are shown in Figure \ref{fig:lz4-writing}. There are no significant differences between reading RNTuples produces from LZ4 or ZSTD algorithms; however, there is a 2 second difference between writing an RNTuple with LZ4 versus ZSTD. The ratio of the LZ4 RNTuple sizes over the RNTuples produced with ZSTD are shown in Figure \ref{fig:lz4-sizes}. They reveal that the LZ4 algorithm increases the RNTuple file sizes by an average of 14\% from ZSTD. 
-
+\vspace{2\baselineskip}
 \begin{figure}[ht]
 \centerline{\includegraphics[height=95mm]{ch4_images/LoadingHistograms_rntuplesLZ4.png}}
-\caption[Distribution of Loading Times Using LZ4 Inputs]{Loading time measurements for RNTuples produced by the LZ4 and ZSTD algorithms, and for TTree. The RNTuples composed with ZSTD and LZ4 only differ by a couple of milliseconds.}
+\caption[Distribution of Loading Times Using \texttt{LZ4} Inputs]{Loading time measurements for RNTuples produced by the \texttt{LZ4} and \texttt{ZSTD} algorithms, and for TTree. The RNTuples composed with \texttt{ZSTD} and \texttt{LZ4} only differ by a couple of milliseconds.}
 \label{fig:lz4-loading}
 \end{figure}
+\vspace{2\baselineskip}
 
+\vspace{2\baselineskip}
 \begin{figure}[ht]
 \centerline{\includegraphics[height=95mm]{ch4_images/OutputHistograms_LZ4.png}}
-\caption[Distribution of Writing Times Using LZ4 Inputs]{Writing time measurements for RNTuples produced by the LZ4 and ZSTD algorithms, and TTree.}
+\caption[Distribution of Writing Times Using \texttt{LZ4} Inputs]{Writing time measurements for RNTuples produced by the \texttt{LZ4} and \texttt{ZSTD} algorithms, and TTree.}
 \label{fig:lz4-writing}
 \end{figure}
+\vspace{2\baselineskip}
 
+\vspace{2\baselineskip}
 \begin{figure}[ht]
-\centerline{\includegraphics[height=95mm]{ch4_images/LZ4_size_comparisons.png}}
-\caption[Per-file Compression Ratios of LZ4:ZSTD Over Total Number of Events]{Per-file compression ratios of LZ4:ZSTD over total number of events.}
+\centerline{\includegraphics[width=\textwidth]{ch4_images/LZ4_size_comparisons.png}}
+\caption[Per-file Disk Size Ratios of RNTuples \texttt{LZ4}:\texttt{ZSTD}]{Per-file compression ratios of \texttt{LZ4}:\texttt{ZSTD} over total number of events.}
 \label{fig:lz4-sizes}
 \end{figure}
+\vspace{2\baselineskip}
 
 \section{Performance Discussion}
 Converting TTrees to RNTuples showed immediate file size reductions. The file sizes on disk were reduced by about 47\%, which is incredibly advantageous in preparation to the HL-LHC. This reduction is due to RNTuple's more efficient compression handling via split encoding. Additionally, clearer separation between metadata from physical payload in RNTuple's structure avoids repetition of structural information in the data; hence reducing overall disk usage. 
 
-Common analysis steps used in RDataFrame workflows improved with RNTuple compared to its TTree predecessor. Reading speed is 2.38 times faster than TTree, and writing speed is 1.51 times faster, without any significant cost to memory usage. This improvement may be due to a combination of: finer grained page layout, simpler and safer access patterns, and better cache locality. As mentioned in Chapter \ref{thirdchapter}, RNTuple stores and compresses physical data in pages. Versus with TTree, physical data is stored in TBaskets. Due to split-encoding, the data in pages are better-organized than data stored in TBaskets, allowing the I/O system to load the minimal data needed back to the user. Plus, the explicit mapping of data using RBLOB keys in RNTuple could also be contributing to the speed increase. In addition to speed improvements, the RNTuple API reduces lines of code, making it more user-friendly than the TTree API. Finally, the writing scripts revealed that RNTuple compresses repeated bits more efficiently than TTree. Instead of filtering out empty events, allowing padding with empty events may be a reasonable new approach for future analysis.
+Common analysis steps used in RDataFrame workflows improved with RNTuple compared to its TTree predecessor. Reading speed is 2.38 times faster than TTree, and writing speed is 1.51 times faster, without any significant cost to memory usage. This improvement may be due to a combination of: finer grained page layout, simpler and safer access patterns, and better cache locality. As mentioned in Chapter \ref{thirdchapter}, RNTuple stores and compresses physical data in pages, whereas TTree, stores physical data in TBaskets. Due to split-encoding, the data in pages are better-organized than data stored in TBaskets, allowing the I/O system to load the minimal data needed back to the user. Plus, the explicit mapping of data using RBLOB keys in RNTuple could also be contributing to the speed increase. In addition to speed improvements, the RNTuple API reduces lines of code, making it more user-friendly than the TTree API. Finally, the writing scripts revealed that RNTuple compresses repeated bits more efficiently than TTree. Instead of filtering out empty events, allowing padding with empty events may be a reasonable new approach for future analysis.
 
-The comparisons between RNTuples produced with LZ4 versus ZSTD provide a first look at how RNTuple behaves with different compression algorithms. RNTuples produced with LZ4 show improved reading and writing speeds, though not at significant levels and at the cost of increased disk size. Given this study, producing RNTuples with ZSTD is recommended. 
+The comparisons between RNTuples produced with \texttt{LZ4} versus \texttt{ZSTD} provide a first look at how RNTuple behaves with different compression algorithms. RNTuples produced with \texttt{LZ4} show improved reading and writing speeds, though not at significant levels and at the cost of increased disk size. Given this study, producing RNTuples with \texttt{ZSTD} is recommended. 

@@ -142,18 +142,18 @@
 \RequirePackage[newlinetospace]{titlesec}
 \titleformat{\chapter}[display] % top level 1
  {\thispagestyle{empty}%
-  \filcenter\large\bfseries}%
+  \filcenter\normalsize\normalfont}%
  {\MakeUppercase{\@chapapp}\ \thechapter}{0pt}{\MakeUppercase}
 \titleformat{\section} % level 2
- {\filcenter\large\bfseries}{\thesection}{1em}{}
+ {\filcenter\normalsize\normalfont}{\thesection}{1em}{}
 \titleformat{\subsection} % level 3
- {\filcenter\large\bfseries}{\thesubsection}{1em}{\uline}
+ {\filcenter\normalsize\normalfont}{\thesubsection}{1em}{\uline}
 \titleformat{\subsubsection}[hang] % level 4
- {\bfseries}{\thesubsubsection}{1em}{\uline}
+ {\normalfont}{\thesubsubsection}{1em}{\uline}
 \titleformat{\paragraph}[runin] % level 5
- {\bfseries}{\theparagraph}{1em}{\uline}[.]
+ {\normalfont}{\theparagraph}{1em}{\uline}[.]
 \titleformat{\subparagraph}[runin] % level 6
- {\bfseries}{\thesubparagraph}{1em}{}[.]
+ {\normalfont}{\thesubparagraph}{1em}{}[.]
 
 \titlespacing{\chapter}{0pt}{1in-\headsep-\headheight
  -1.15\baselineskip}{*5} % top level 1
@@ -170,8 +170,8 @@
 \contentsmargin[0.6pc]{2.5em} % set right margin
 \titlecontents
   {chapter} [1.5em] {}                  % {<section>} [left] {<above>}
-  {\contentslabel{1.5em}\thMakeUppercase} % {<before with lablel>}
-  {\hspace*{-1.5em}\thMakeUppercase}      % {<before without label>}
+  {\contentslabel{1.5em}\MakeUppercase} % {<before with lablel>}
+  {\hspace*{-1.5em}\MakeUppercase}      % {<before without label>}
   {\titlerule*[0.6pc]{.}\contentspage}  % {<filler and page>}
 % \dottedcontents{section}[<left>]{<above>}{<label width>}{<leader width>}
 % The difference (<left> - <label width>) is <left> for the next-upper level
@@ -209,13 +209,13 @@
   \ifnum\th@loacount>1%
     \titleformat{\chapter}[display]%
       {\vspace*{\fill}\thispagestyle{empty}%
-       \singlespacing\filcenter\large\bfseries}%
+       \singlespacing\filcenter\normalsize\normalfont}%
       {\MakeUppercase{\@chapapp}\ \thechapter}{1em}{\MakeUppercase}%
       [\vspace*{\fill}\vspace*{8ex}\newpage]%
   \else
     \titleformat{\chapter}[display]%
       {\vspace*{\fill}\thispagestyle{empty}%
-       \singlespacing\filcenter\large\bfseries}%
+       \singlespacing\filcenter\normalsize\normalfont}%
       {\MakeUppercase{\@chapapp}}{1em}{\MakeUppercase}%
       [\vspace*{\fill}\vspace*{8ex}\newpage]%
   \fi
@@ -246,6 +246,8 @@
   % adapted from titlesec.sty
   \def\ttl@addcontentsline##1##2{\ifnum\th@loacount>1%
    \addcontentsline{loa}{##1}{\ifttl@toclabel\ttl@a\fi##2}\fi}}
+
+   
 
 %%%%%%%%%%% ADDITIONAL FORMATTING STUFF:
 \pagenumbering{arabic}
@@ -345,9 +347,9 @@
      % But we only add 0.25in to the default 1.0in to get exactly
      % what we want.
      \vspace*{0.25in}
-     \centerline{\bfseries ABSTRACT}
+     \centerline{\normalfont ABSTRACT}
      \vspace*{0.5in}
-     {\bfseries\begin{center}
+     {\normalfont\begin{center}
         \uppercase\expandafter{\th@title}
       \end{center}}
      \vspace{1ex}
@@ -384,7 +386,7 @@
        \centerline{\MakeUppercase{\th@degreemonth\space\th@degreeyear}}
        \vfill
        \begin{doublespace}
-         {\bfseries\begin{center}
+         {\normalfont\begin{center}
            \uppercase\expandafter{\th@title}
          \end{center}}
          \vfill 

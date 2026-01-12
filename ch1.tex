@@ -11,16 +11,18 @@ The SM is a quantum field theory that explains and categorizes all observed fund
 
 The four groups of particles shown in Figure \ref{fig:SM_wikid}: quarks, leptons, gauge bosons, and scalar bosons, can be further categorized as \emph{fermions} or \emph{bosons} because of a fundamental property called spin. All bosons carry an integer spin; while, fermions carry half-integer spin. 
 
+\vspace{2\baselineskip}
 % Standard Model Figure
 \begin{figure}[ht]
 \centerline{\includegraphics[height=95mm]{ch1_images/Standard_Model_of_Elementary_Particles.png}}
 \caption[The Standard Model]{Particle content of the Standard Model \cite{ElementaryParticle_Wikipedia}.}
 \label{fig:SM_wikid}
 \end{figure}
+\vspace{2\baselineskip}
 
 Fermions are the particles that make up matter. Each fermion has an antiparticle with the same mass and lifetime as the particle itself, but the antiparticle is oppositely charged. The three charged leptons ($e$, $\mu$, $\tau$) are massive, while their corresponding neutrinos ($\nu_e$, $\nu_{\mu}$, $\nu_{\tau}$), are treated as massless with neutral charge. Quarks combine to form composite particles, such as protons and neutrons, which are collectively called hadrons. There are six flavors or types of quarks (up, down, strange, charm, top, and bottom), each of which carries an intrinsic property called color charge (red, green and blue). 
 
-Bosons mediate the interactions between fermions. Gluons interact with quarks through the strong nuclear force. Photons and the $W^\pm$\/$Z$ bosons interact with leptons (and quarks), giving rise to the electromagnetic and weak nuclear forces. The Higgs boson \cite{Aad_2012, Chatrchyan_2012} is responsible for giving other elementary particles their mass and for electroweak symmetry breaking. It has spin 0 and is categorized separately from the spin-1 vector bosons as a scalar boson.
+Bosons mediate the interactions between fermions. Gluons interact with quarks through the strong nuclear force. Photons and the $W^\pm / Z$ bosons interact with leptons (and quarks), giving rise to the electromagnetic and weak nuclear forces. The Higgs boson \cite{Aad_2012, Chatrchyan_2012} is responsible for giving other elementary particles their mass and for electroweak symmetry breaking. It has spin 0 and is categorized separately from the spin-1 vector bosons as a scalar boson.
 
 Collider experiments probe the SM by studying the products of collisions between fundamental particles. In colliders, two particle beams are accelerated to reach high energies and brought together for collision. Each crossing of particle beams is called an event and specific interactions or transformations are called processes. Processes are governed by conservation laws, such as conservation of energy and charge, and follow the interactions and rules described within the SM. Around collision points, particle detectors are built to detect the particles produced from events. These detectors are complex and composed of different parts that allow particles to interact with by either ionizing material or by depositing energy such that it produces a signal. The measured signals are then used to reconstruct and classify the particles and processes. Through QFT, the rate of a process, called its cross section, can be predicted via the kinematics of the particles involved, their properties, and the properties of the process. Experimentally, cross sections can be calculated via Equation \ref{eq:cross-section}, where $N$ is the number of events for the process being measured and $L$ is the instantaneous luminosity, defined in Equation as \ref{eq:luminosity}. 
 \begin{equation}
@@ -31,7 +33,14 @@ Collider experiments probe the SM by studying the products of collisions between
 	L = f \frac{n_1 n_2}{4\pi\sigma_x\sigma_y}
 \label{eq:luminosity}
 \end{equation}
-$f$ is the frequency of collisions, $n_1$ and $n_2$ are the number of particles in the colliding bunches. $\sigma_x$ and $\sigma_y$ are the root-mean-squared horizontal and vertical beam sizes. Figure \ref{fig:SM_cross-sections} displays the predicted cross-sections for certain processes and the required center of mass energies for those processes to be observed. Processes with smaller cross-sections are considered rare-processes because they have a lower probability of being observed. Increasing the probability of these rare-processes would require an increase of energy.  
+$f$ is the frequency of collisions, $n_1$ and $n_2$ are the number of particles in the colliding bunches. $\sigma_x$ and $\sigma_y$ are the root-mean-squared horizontal and vertical beam sizes. Figure \ref{fig:SM_cross-sections} displays the predicted cross-sections for certain processes and the required center of mass energies for those processes to be observed. Processes with smaller cross-sections are considered rare-processes because they have a lower probability of being observed. Increasing the probability of these rare-processes would require an increase of energy.
+
+\section{Physics Quantities}
+This section will cover some relevant physics quantities used in this thesis. 
+\subsection{Invariant Mass}
+ Invariant mass is a quantity that characterizes a system's total energy and momentum independent of the overall motion of the system \cite{ATLAS_MassGlossary}. Due to special relativity, space and time coordinates are linked, but dependent on a frame of reference. Lorentz transformations are used to convert coordinates from one reference frame to another, and four-vectors are used to simplify these transformations \cite{VanWijk_4VectorsInvariantMass}. A four-vector represents a physical quantity in space-time. For example, the position four-vector includes the spatial coordinates ($x$, $y$, $z$) and time, while the four-momentum vector includes the energy and the momentum coordinates in the $x$, $y$, and $z$ directions. Four-vectors provide a convenient framework for calculating invariant quantities such as the invariant mass of a resonance that has decayed into other particles. 
+
+ \vspace{2\baselineskip}  
 \begin{figure}[ht]
 \centerline{\includegraphics[width=\textwidth]{ch1_images/SMSummary.png}}
 \caption[Summary of SM Cross-section Measurements]{
@@ -39,30 +48,28 @@ $f$ is the frequency of collisions, $n_1$ and $n_2$ are the number of particles 
 	}
 \label{fig:SM_cross-sections}
 \end{figure}
+\vspace{2\baselineskip}
 
-\section{Physics Quantities}
-This section will cover some relevant physics quantities used in this thesis. 
-\subsection{Invariant Mass}
- Invariant mass is a quantity that characterizes a system's total energy and momentum independent of the overall motion of the system \cite{ATLAS_MassGlossary}. Due to special relativity, space and time coordinates are linked, but dependent on a frame of reference. Lorentz transformations are used to convert coordinates from one reference frame to another, and four-vectors are used to simplify these transformations \cite{VanWijk_4VectorsInvariantMass}. A four-vector represents a physical quantity in space-time. For example, the position four-vector includes the spatial coordinates (x, y, z) and time, while the four-momentum vector includes the energy and the momentum coordinates in the x, y, and z directions. Four-vectors provide a convenient framework for calculating invariant quantities such as the invariant mass of a resonance that has decayed into other particles. 
-
-As an example, a Z boson can decay into a pair of oppositely charged electrons or oppositely charged muons. The ATLAS detector will record the leptons' momentum in x, y, and z directions ($p_x$, $p_y$, $p_z$), their energy ($E$), and other kinematic information. Using this information, the invariant mass of the lepton pair can be calculated using Equation \ref{eq:invariant_mass} to ultimately confirm their origin. Figure \ref{fig: invariant_mass} displays an example distribution of invariant mass values for oppositely charged electron pairs using an electroweak boson sample from ATLAS Open Data \cite{ATLAS_OpenData_80010}. The peak of the distribution returns the expected Z boson mass at 91.25 GeV. 
+As an example, a Z boson can decay into a pair of oppositely charged electrons or oppositely charged muons. The ATLAS detector will record the leptons' momentum in $x$, $y$, and $z$ directions ($p_x$, $p_y$, $p_z$), their energy ($E$), and other kinematic information. Using this information, the invariant mass of the lepton pair can be calculated using Equation \ref{eq:invariant_mass} to ultimately confirm their origin. Figure \ref{fig: invariant_mass} displays an example distribution of invariant mass values for oppositely charged electron pairs using an electroweak boson sample from ATLAS Open Data \cite{ATLAS_OpenData_80010}. The peak of the distribution returns the expected Z boson mass at 91.25 GeV. 
 \begin{equation}
 m = \sqrt{\sum E^2 - \sum p_x^2 - \sum p_y^2 - \sum p_z^2}
 \label{eq:invariant_mass}
 \end{equation}
 
+\vspace{2\baselineskip}
 \begin{figure}[ht]
 \centerline{\includegraphics[height=95mm]{ch1_images/Zee_invm.png}}
 \caption[Invariant Mass Distribution of Oppositely Charged Electron Pairs.]{Invariant Mass distribution of oppositely charged electron pairs using electroweak boson sample from ATLAS Open Data \cite{ATLAS_OpenData_80010}.}
 \label{fig: invariant_mass}
 \end{figure}
+\vspace{2\baselineskip}
 
 In Chapter \ref{fourthchapter}, an invariant mass calculation is performed using oppositely charged electron and muon pairs. This calculation was done as an initial benchmark to compare RNTuple versus its predecessor TTree. 
 
 \subsection{Jets}
 Jets are energy deposits in the detector that are grouped together to represent quarks and gluons, collectively known as partons \cite{ATLAS_OpenData_JetsDoc}. Due to color charge, quarks are permanently confined within hadrons \cite{CERN_hadron_tag}. When a parton is produced in a collision, it undergoes a parton shower and hadronization chain that produces a collimated grouping of hadrons that shares properties with the original parton. As a result, jets are used as physical proxies for partons and are reconstructed using various algorithms to different types of objects, such as energy deposits or tracks.
 
-In Chapter \ref{fifthchapter}, a selection of b-tagged jets is applied for the AGC. A b-tagged jet is a jet that is identified as being originated by a bottom or anti-bottom quark. B-tagging algorithms use a combination of tracking and vertexing variables that exploit the long lifetime of B-hadrons. In the studies presented in this thesis, a machine learning algorithm based on a deep neural network (DL1) is used. The output of the algorithm are the $p_b$, $p_c$, and $p_u$ variables that are combined in Equation \ref{eq: btag}, where $f_c$ is a constant equal to $f_c = 0.018$. The final b-tagging discriminate is defined as $D_{DL1}$. A jet is considered as b-tagged if $D_{DL1}$ is above the threshold value of 2.456, corresponding to an efficiency of 77\% \cite{ATLAS:2019bwq}. 
+In Chapter \ref{fifthchapter}, a selection of $b$-tagged jets is applied for the AGC. A $b$-tagged jet is a jet that is identified as being originated by a bottom or anti-bottom quark. $B$-tagging algorithms use a combination of tracking and vertexing variables that exploit the long lifetime of $b$-hadrons. In the studies presented in this thesis, a machine learning algorithm based on a deep neural network (DL1) is used. The output of the algorithm are the $p_b$, $p_c$, and $p_u$ variables that are combined in Equation \ref{eq: btag}, where $f_c$ is a constant equal to $f_c = 0.018$. The final $b$-tagging discriminate is defined as $D_{DL1}$. A jet is considered as $b$-tagged if $D_{DL1}$ is above the threshold value of 2.456, corresponding to an efficiency of 77\% \cite{ATLAS:2019bwq}. 
 \begin{equation}
 D_{DL1} = \log{(\frac{p_b}{f_c \times p_c + (1-f_c)\times p_u})}
 \label{eq: btag}
